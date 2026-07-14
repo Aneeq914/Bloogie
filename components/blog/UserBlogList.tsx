@@ -2,7 +2,6 @@ import Image from "next/image";
 import { getBlogs } from "@/lib/actions/Blog.action";
 import Link from "next/link";
 import dayjs from "dayjs";
-import BlogTags from "./BlogTags";
 
 const UserBlogList = async () => {
   const blogList = await getBlogs();
@@ -92,7 +91,6 @@ const UserBlogList = async () => {
           )}
         </div>
       </div>
-      <BlogTags tags={blogList?.map((blog) => blog.tags) ?? []} />
     </div>
   );
 };

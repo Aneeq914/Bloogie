@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useForm, Controller } from "react-hook-form";
-import { errorClass, inputClass } from "@/lib/ui";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { profileSchema } from "@/schemas/profileSchema";
@@ -118,11 +117,11 @@ const BasicProfile = () => {
                 name="fname"
                 control={control}
                 render={({ field }) => (
-                  <input type="text" className={inputClass} {...field} />
+                  <input type="text" className="input" {...field} />
                 )}
               />
               {errors.fname && (
-                <p className={errorClass}>{errors.fname.message}</p>
+                <p className="error">{errors.fname.message}</p>
               )}
             </div>
             <div>
@@ -131,11 +130,11 @@ const BasicProfile = () => {
                 name="lname"
                 control={control}
                 render={({ field }) => (
-                  <input type="text" className={inputClass} {...field} />
+                  <input type="text" className="input" {...field} />
                 )}
               />
               {errors.lname && (
-                <p className={errorClass}>{errors.lname.message}</p>
+                <p className="error">{errors.lname.message}</p>
               )}
             </div>
           </div>
@@ -146,11 +145,11 @@ const BasicProfile = () => {
               name="username"
               control={control}
               render={({ field }) => (
-                <input type="text" className={inputClass} {...field} />
+                <input type="text" className="input" {...field} />
               )}
             />
             {errors.username && (
-              <p className={errorClass}>{errors.username.message}</p>
+              <p className="error">{errors.username.message}</p>
             )}
           </div>
 
@@ -172,7 +171,7 @@ const BasicProfile = () => {
               )}
             />
             {errors.bio && (
-              <p className={`${errorClass}`}>{errors.bio.message}</p>
+              <p className="error">{errors.bio.message}</p>
             )}
           </div>
 

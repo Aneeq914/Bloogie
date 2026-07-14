@@ -1,10 +1,9 @@
-import { containerClass } from "@/lib/ui";
 
 const Footer = () => {
   return (
     <footer className="mt-16 border-t border-gray-200 bg-linear-to-b from-white to-brand-50/40">
       <div
-        className={`flex flex-col items-center justify-between gap-4 py-8 sm:flex-row ${containerClass}`}
+        className="flex flex-col items-center justify-between gap-4 py-8 sm:flex-row container-page"
       >
         <div className="flex items-center gap-2.5">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-brand-600 to-brand-500 text-base font-black text-white shadow-sm">

@@ -1,4 +1,3 @@
-import { skeletonClass } from "@/lib/ui";
 
 export default function Loading() {
   return (
@@ -10,26 +9,26 @@ export default function Loading() {
 
       <article className="relative mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
         <header className="mb-8">
-          <div className={`mb-6 h-4 w-16 ${skeletonClass}`} />
+          <div className="mb-6 h-4 w-16 skeleton" />
           {/* Title */}
           <div className="space-y-3">
-            <div className={`h-11 w-full ${skeletonClass}`} />
-            <div className={`h-11 w-2/3 ${skeletonClass}`} />
+            <div className="h-11 w-full skeleton" />
+            <div className="h-11 w-2/3 skeleton" />
           </div>
           {/* Author + date */}
           <div className="mt-5 flex items-center gap-3">
-            <div className={`h-4 w-24 ${skeletonClass}`} />
-            <div className={`h-4 w-28 ${skeletonClass}`} />
+            <div className="h-4 w-24 skeleton" />
+            <div className="h-4 w-28 skeleton" />
           </div>
         </header>
 
         {/* Cover image */}
-        <div className={`mb-8 aspect-video w-full ${skeletonClass}`} />
+        <div className="mb-8 aspect-video w-full skeleton" />
 
         {/* Short description */}
         <div className="mb-8 space-y-2 border-l-4 border-gray-200 pl-4">
-          <div className={`h-5 w-full ${skeletonClass}`} />
-          <div className={`h-5 w-4/5 ${skeletonClass}`} />
+          <div className="h-5 w-full skeleton" />
+          <div className="h-5 w-4/5 skeleton" />
         </div>
 
         {/* Body paragraphs */}
@@ -37,7 +36,7 @@ export default function Loading() {
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className={`h-4 ${i % 3 === 2 ? "w-2/3" : "w-full"} ${skeletonClass}`}
+              className={`h-4 ${i % 3 === 2 ? "w-2/3" : "w-full"} skeleton`}
             />
           ))}
         </div>

@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { inputClass, labelClass, errorClass, primaryButton } from "@/lib/ui";
 
 type LoginFormData = z.infer<typeof LoginSchema>;
 
@@ -53,7 +52,7 @@ const LoginUser = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div>
-            <label htmlFor="email" className={labelClass}>
+            <label htmlFor="email" className="label">
               Email Address
             </label>
             <Controller
@@ -65,18 +64,18 @@ const LoginUser = () => {
                   id="email"
                   type="text"
                   placeholder="someone@example.com"
-                  className={inputClass}
+                  className="input"
                   {...field}
                 />
               )}
             />
             {errors.email && (
-              <p className={errorClass}>{errors.email.message}</p>
+              <p className="error">{errors.email.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="password" className={labelClass}>
+            <label htmlFor="password" className="label">
               Password
             </label>
             <Controller
@@ -88,18 +87,18 @@ const LoginUser = () => {
                   id="password"
                   type="password"
                   placeholder="Enter password"
-                  className={inputClass}
+                  className="input"
                   {...field}
                 />
               )}
             />
             {errors.password && (
-              <p className={errorClass}>{errors.password.message}</p>
+              <p className="error">{errors.password.message}</p>
             )}
-            {errors.root && <p className={errorClass}>{errors.root.message}</p>}
+            {errors.root && <p className="error">{errors.root.message}</p>}
           </div>
 
-          <button type="submit" className={`w-full ${primaryButton}`}>
+          <button type="submit" className="w-full btn-primary">
             Login
           </button>
         </form>
