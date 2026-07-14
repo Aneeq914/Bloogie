@@ -15,10 +15,14 @@ const UserSchema: Schema<UserProps> = new Schema(
       type: String,
       required: [true, "UserName is Required"],
       unique: true,
+      trim: true,
     },
     email: {
       type: String,
       required: [true, "Email is Required"],
+      unique: true,
+      trim : true,
+      lowercase: true,
     },
     password: {
       type: String,
@@ -31,12 +35,12 @@ const UserSchema: Schema<UserProps> = new Schema(
       enum: ["user", "author"],
       type: String,
     },
-    image : {
-      type : String
+    image: {
+      type: String,
     },
-    bio:{
-      type : String,
-    }
+    bio: {
+      type: String,
+    },
   },
   {
     timestamps: true,

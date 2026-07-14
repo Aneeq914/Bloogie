@@ -47,14 +47,17 @@ const UserBlogList = async () => {
                   </Link>
 
                   <div className="flex flex-1 flex-col p-5">
-                    {blog.tags && (
-                      <Link
-                        href={`/tags/${encodeURIComponent(blog.tags)}`}
-                        className="mb-2 inline-flex w-fit items-center rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-600 ring-1 ring-inset ring-brand-100 transition hover:bg-brand-100 hover:text-brand-700"
-                      >
-                        {blog.tags}
-                      </Link>
-                    )}
+                    <div className="mb-2 flex flex-wrap gap-1.5">
+                      {blog.tags?.map((tag: string) => (
+                        <Link
+                          key={tag}
+                          href={`/tags/${encodeURIComponent(tag)}`}
+                          className="inline-flex w-fit items-center rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-600 ring-1 ring-inset ring-brand-100 transition hover:bg-brand-100 hover:text-brand-700"
+                        >
+                          {tag}
+                        </Link>
+                      ))}
+                    </div>
 
                     <Link href={`/detail-page/${blog.id}`}>
                       <h3 className="text-lg font-semibold text-gray-900 line-clamp-1 transition group-hover:text-brand-600">

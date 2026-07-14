@@ -4,7 +4,7 @@ export const signupSchema = z.object({
   fname: z.string().trim().min(1, "First Name Field Empty"),
   lname: z.string().trim().min(1, "Last Name Field Empty"),
   username: z.string().trim().min(1, "Username Field Empty"),
-  email: z.string().trim().pipe(z.email("Enter Valid Email Address")),
+  email: z.string().pipe(z.email("Enter Valid Email Address").lowercase()),
   userType: z.enum(["author", "user"]),
   password: z
     .string()

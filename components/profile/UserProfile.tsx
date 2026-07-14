@@ -2,18 +2,27 @@
 
 import { Logout } from "@/lib/actions/Auth.action";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSession } from "../auth/SessionProvider";
 import Link from "next/link";
 
 const UserProfile = () => {
   const user = useSession();
   const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (!menuRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
 
   return (
-    <div className="relative flex justify-center">
+    <div ref={menuRef} className="relative flex justify-center">
       <button
-        onClick={() => setOpen(!open)}
+        onClick={() => setOpen((prev)=> !prev)}
         aria-label="Open profile menu"
         className="rounded-full ring-2 ring-gray-200 transition hover:ring-brand-500/60 focus:outline-none focus:ring-2 focus:ring-brand-500"
       >
@@ -36,6 +45,7 @@ const UserProfile = () => {
           <div className="py-2">
             <Link
               href={`/profilepage`}
+              onClick={() => setOpen(false)}
               className="flex w-full items-center gap-3 px-5 py-3 text-left text-sm text-gray-700 transition hover:bg-gray-100"
             >
               👤 Edit Profile

@@ -6,6 +6,7 @@ import Blog from "@/models/Blog";
 import { revalidatePath } from "next/cache";
 import { Types } from "mongoose";
 import { getSession } from "../dal";
+import { success } from "zod";
 
 export async function updateBlog({
   id,
@@ -53,18 +54,30 @@ export async function updateBlog({
   }
 }
 
-export async function getBlogTags(){
-  
+export async function getBlogTags() {
+  await connectToDB();
+  try {
+    return await Blog.distinct("tags");
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function getBlogs() {
   //All blogs
   await connectToDB();
   try {
-    const blogs = await Blog.find({});
-    if (!blogs) {
-    }
-    return blogs;
+    const blogs = await Blog.find({}).sort({ createdAt: -1 }).lean();
+    return blogs.map((blog) => ({
+      id: blog._id.toString(),
+      title: blog.title,
+      author: blog.author,
+      image: blog.image,
+      shortDescription: blog.shortDescription,
+      longDescription: blog.longDescription,
+      publishedAt: blog.publishedAt,
+      tags: blog.tags,
+    }));
   } catch (error) {
     console.log(error);
   }
@@ -94,9 +107,9 @@ export async function getBlog(id: string) {
 export async function getBlogsByAuthor(authorId: string) {
   await connectToDB();
   try {
-    const blogs = await Blog.find({ authorId }).lean();
+    const blogs = await Blog.find({ authorId }).sort({ createdAt: -1 }).lean();
     return blogs.map((blog) => ({
-      id: blog._id,
+      id: blog._id.toString(),
       title: blog.title,
       author: blog.author,
       image: blog.image,
@@ -114,7 +127,7 @@ export async function deleteBlog(id: string) {
   await connectToDB();
   try {
     await Blog.findByIdAndDelete(id);
-    revalidatePath("/");
+    revalidatePath("/author-dashboard");
   } catch (error) {
     console.log(error);
     return { success: false, message: "Could not delete blog" };

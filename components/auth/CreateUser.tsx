@@ -17,6 +17,7 @@ const CreateUser = () => {
   const {
     control,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signupSchema),
@@ -34,18 +35,22 @@ const CreateUser = () => {
 
   const onSubmit = async (data: SignUpFormData) => {
     const { fname, lname, username, email, password, userType } = data;
-    try {
-      await registerUser({
-        fname,
-        lname,
-        username,
-        email,
-        password,
-        userType,
+    const res = await registerUser({
+      fname,
+      lname,
+      username,
+      email,
+      password,
+      userType,
+    });
+
+    if (!res.success) {
+      setError(res.field === "username" ? "username" : "email", {
+        message: res.message,
       });
-    } catch (error) {
-      console.log(error);
+      return;
     }
+
     router.push("/login");
   };
 

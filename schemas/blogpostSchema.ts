@@ -13,7 +13,9 @@ export const blogPostSchema = z.object({
   shortDescription: z
     .string()
     .min(10, "A Short Description must be added")
-    .max(150, "It's a Short Description"),
-  longDescription: z.string().min(100, "A Detailed Description must be added"),
-  tags: z.string().optional(),
+    .max(150, "Description must not be longer than 150 characters."),
+  longDescription: z
+    .string()
+    .min(100, "Detailed description must be at least 100 characters long."),
+  tags: z.array(z.string()).optional(),
 });

@@ -1,6 +1,6 @@
 "use server";
 
-import { LoginProps, UserProps } from "@/type";
+import { UserProps } from "@/type";
 import { connectToDB } from "../dbConnect";
 import User from "@/models/User";
 import { cookies } from "next/headers";
@@ -29,16 +29,24 @@ export async function registerUser({
       userType,
     });
     return { success: true, message: "Account Created SuccessFully" };
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+      return {
+        success: false,
+         field,
+        message: `This ${field} is already registered`,
+      };
+    }
     console.log(error);
-    return { success: false, message: "Something Went Worng" };
   }
+  return { success: false, message: "Something Went Worng" };
 }
 
-export async function loginUser({ email, password }: LoginProps) {
+export async function loginUser({ email, password }: UserProps) {
   await connectToDB();
   try {
-    const newUser = await User.findOne({ email });
+    const newUser = await User.findOne({ email: email.trim().toLowerCase() });
     if (!newUser)
       return { success: false, message: "Invalid Email or Password." };
 

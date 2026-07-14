@@ -10,7 +10,7 @@ import { updateBlog } from "@/lib/actions/Blog.action";
 import { AllBlogProps } from "@/type";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
+import CreatableSelect from "react-select/creatable";
 
 interface BlogProps {
   blog?: Omit<AllBlogProps, "createdAt" | "updatedAt">;
@@ -31,11 +31,12 @@ const CreateBlog = ({ blog }: BlogProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [preview, setPreview] = useState(blog?.image || "");
 
-  const router = useRouter()
+  const router = useRouter();
 
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<BlogFormData>({
     resolver: zodResolver(blogPostSchema),
@@ -45,7 +46,7 @@ const CreateBlog = ({ blog }: BlogProps) => {
       image: blog?.image ?? "",
       shortDescription: blog?.shortDescription ?? "",
       longDescription: blog?.longDescription ?? "",
-      tags: blog?.tags ?? "",
+      tags: blog?.tags ?? [],
     },
   });
 
@@ -60,19 +61,17 @@ const CreateBlog = ({ blog }: BlogProps) => {
         shortDescription: data.shortDescription,
         longDescription: data.longDescription,
         publishedAt: new Date(),
-        tags : data.tags,
+        tags: data.tags,
       });
     } catch (error) {
       console.log(error);
     } finally {
       setIsSubmitting(false);
-      router.push("/author-dashboard")
+      router.push("/author-dashboard");
     }
   };
-    const isEdit = Boolean(blog)
-  
+  const isEdit = Boolean(blog);
 
-    
   const previewBlock = preview ? (
     <div
       className={`relative h-64 ${
@@ -90,6 +89,8 @@ const CreateBlog = ({ blog }: BlogProps) => {
       />
     </div>
   ) : null;
+
+  const shortDescription = watch("shortDescription");
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center gap-6 bg-linear-to-b from-gray-50 to-gray-100 px-4 py-10">
@@ -125,9 +126,7 @@ const CreateBlog = ({ blog }: BlogProps) => {
               />
             )}
           />
-          {errors.title && (
-            <p className="error">{errors.title.message}</p>
-          )}
+          {errors.title && <p className="error">{errors.title.message}</p>}
         </div>
         <div>
           <label htmlFor="author" className="label">
@@ -147,9 +146,7 @@ const CreateBlog = ({ blog }: BlogProps) => {
               />
             )}
           />
-          {errors.author && (
-            <p className="error">{errors.author.message}</p>
-          )}
+          {errors.author && <p className="error">{errors.author.message}</p>}
         </div>
         <div>
           <label htmlFor="image" className="label">
@@ -181,9 +178,7 @@ const CreateBlog = ({ blog }: BlogProps) => {
             )}
           />
           {!isEdit && previewBlock}
-          {errors.image && (
-            <p className="error">{errors.image.message}</p>
-          )}
+          {errors.image && <p className="error">{errors.image.message}</p>}
         </div>
         <div>
           <label htmlFor="shortDescription" className="label">
@@ -203,6 +198,9 @@ const CreateBlog = ({ blog }: BlogProps) => {
               />
             )}
           />
+          <p className="text-right text-xs text-gray-500">
+            {shortDescription?.length ?? 0}/150
+          </p>
           {errors.shortDescription && (
             <p className="error">{errors.shortDescription.message}</p>
           )}
@@ -225,6 +223,7 @@ const CreateBlog = ({ blog }: BlogProps) => {
               />
             )}
           />
+
           {errors.longDescription && (
             <p className="error">{errors.longDescription.message}</p>
           )}
@@ -237,21 +236,20 @@ const CreateBlog = ({ blog }: BlogProps) => {
             name="tags"
             control={control}
             render={({ field }) => (
-              <input
-                id="tags"
+              <CreatableSelect
+                isMulti
+                instanceId="tags"
                 placeholder="e.g. Web Dev"
-                className="input"
-                {...field}
-                value={field.value ?? ""}
+                value={field.value?.map((t) => ({ label: t, value: t }))}
+                onChange={(e) => field.onChange(e.map((o) => o.value))}
+                onBlur={field.onBlur}
               />
             )}
           />
           <p className="mt-1 text-xs text-gray-500">
             Optional — shown as a badge on the blog card.
           </p>
-          {errors.tags && (
-            <p className="error">{errors.tags.message}</p>
-          )}
+          {errors.tags && <p className="error">{errors.tags.message}</p>}
         </div>
         <button
           title="CreateBlog"
@@ -259,7 +257,11 @@ const CreateBlog = ({ blog }: BlogProps) => {
           disabled={isSubmitting}
           className="mt-2 w-full btn-primary"
         >
-          {isSubmitting ? "Saving..." : isEdit ? "Save\u00A0Changes" : "Create\u00A0Blog"}
+          {isSubmitting
+            ? "Saving..."
+            : isEdit
+              ? "Save\u00A0Changes"
+              : "Create\u00A0Blog"}
         </button>
         <Link
           href={`/`}

@@ -38,7 +38,8 @@ const blogSchema: Schema<AllBlogProps> = new Schema(
       required: [true, " PublishedAt is required"],
     },
     tags: {
-      type: String,
+      type: [String],
+      default: [],
     },
   },
   {

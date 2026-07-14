@@ -9,7 +9,7 @@ export interface AllBlogProps {
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date;
-  tags?: string;
+  tags?: string[];
 }
 
 export interface CreateBlogProps {
@@ -20,12 +20,7 @@ export interface CreateBlogProps {
   shortDescription: string;
   longDescription: string;
   publishedAt: Date;
-  tags?: string;
-}
-
-export interface LoginProps {
-  email: string;
-  password: string;
+  tags?: string[];
 }
 
 export interface UserProps {
