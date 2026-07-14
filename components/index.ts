@@ -8,12 +8,12 @@ import CreateBlog from "./blog/CreateBlog";
 import AuthorBlogList from "./blog/AuthorBlogList";
 import DeletePost from "./blog/DeleteButton";
 import UserBlogList from "./blog/UserBlogList";
+import BlogTags from "./blog/BlogTags";
 
 // Auth
 import CreateUser from "./auth/CreateUser";
 import LoginUser from "./auth/LoginUser";
 import SignUpTypes from "./auth/SignUpTypes";
-import LogOut from "./auth/LogOut";
 import SessionProvider from "./auth/SessionProvider";
 
 // Profile
@@ -33,10 +33,10 @@ export {
   LoginUser,
   SignUpTypes,
   UserProfile,
-  LogOut,
   SessionProvider,
   EditProfile,
   BasicProfile,
   AccountProfile,
   UserBlogList,
+  BlogTags,
 };
