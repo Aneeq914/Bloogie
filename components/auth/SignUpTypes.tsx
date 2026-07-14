@@ -1,13 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 const SignUpTypes = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (!menuRef.current?.contains(e.target as Node)) setIsOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
 
   return (
-    <div className="relative flex items-center gap-3">
+    <div ref={menuRef} className="relative flex items-center gap-3">
       <Link
         href="/login"
         className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:border-brand-500 hover:text-brand-600"
@@ -37,6 +46,7 @@ const SignUpTypes = () => {
 
           <Link
             href="/signup?userType=author"
+            onClick={() => setIsOpen(false)}
             className="mt-2 block rounded-lg px-4 py-3 transition hover:bg-brand-50"
           >
             <p className="font-medium text-gray-800">Author</p>
@@ -47,6 +57,7 @@ const SignUpTypes = () => {
 
           <Link
             href="/signup?userType=user"
+            onClick={() => setIsOpen(false)}
             className="mt-2 block rounded-lg px-4 py-3 transition hover:bg-brand-50"
           >
             <p className="font-medium text-gray-800">User</p>
