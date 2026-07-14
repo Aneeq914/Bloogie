@@ -52,6 +52,11 @@ export async function updateBlog({
     console.log(error);
   }
 }
+
+export async function getBlogTags(){
+  
+}
+
 export async function getBlogs() {
   //All blogs
   await connectToDB();

@@ -10,7 +10,6 @@ import { updateBlog } from "@/lib/actions/Blog.action";
 import { AllBlogProps } from "@/type";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { inputClass, labelClass, errorClass, primaryButton, cardClass } from "@/lib/ui";
 
 
 interface BlogProps {
@@ -97,7 +96,7 @@ const CreateBlog = ({ blog }: BlogProps) => {
       {isEdit && previewBlock}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className={`flex w-full max-w-lg flex-col gap-4 p-6 md:p-8 ${cardClass}`}
+        className="flex w-full max-w-lg flex-col gap-4 p-6 md:p-8 card"
       >
         <div className="mb-2">
           <h1 className="text-2xl font-bold text-gray-900">
@@ -110,7 +109,7 @@ const CreateBlog = ({ blog }: BlogProps) => {
           </p>
         </div>
         <div>
-          <label htmlFor="title" className={`${labelClass}`}>
+          <label htmlFor="title" className="label">
             Title
           </label>
           <Controller
@@ -121,17 +120,17 @@ const CreateBlog = ({ blog }: BlogProps) => {
               <input
                 id="title"
                 placeholder="Enter the blog title"
-                className={`${inputClass}`}
+                className="input"
                 {...field}
               />
             )}
           />
           {errors.title && (
-            <p className={`${errorClass}`}>{errors.title.message}</p>
+            <p className="error">{errors.title.message}</p>
           )}
         </div>
         <div>
-          <label htmlFor="author" className={`${labelClass}`}>
+          <label htmlFor="author" className="label">
             Author
           </label>
 
@@ -143,17 +142,17 @@ const CreateBlog = ({ blog }: BlogProps) => {
               <input
                 id="author"
                 placeholder="Enter the author's name"
-                className={`${inputClass}`}
+                className="input"
                 {...field}
               />
             )}
           />
           {errors.author && (
-            <p className={`${errorClass}`}>{errors.author.message}</p>
+            <p className="error">{errors.author.message}</p>
           )}
         </div>
         <div>
-          <label htmlFor="image" className={`${labelClass}`}>
+          <label htmlFor="image" className="label">
             Image
           </label>
 
@@ -177,17 +176,17 @@ const CreateBlog = ({ blog }: BlogProps) => {
                   const base64 = await fileToBase64(file);
                   onChange(base64);
                 }}
-                className={`${inputClass} cursor-pointer file:mr-3 file:rounded-md file:border-0 file:bg-brand-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-600 hover:file:bg-brand-100`}
+                className="input cursor-pointer file:mr-3 file:rounded-md file:border-0 file:bg-brand-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-600 hover:file:bg-brand-100"
               />
             )}
           />
           {!isEdit && previewBlock}
           {errors.image && (
-            <p className={`${errorClass}`}>{errors.image.message}</p>
+            <p className="error">{errors.image.message}</p>
           )}
         </div>
         <div>
-          <label htmlFor="shortDescription" className={`${labelClass}`}>
+          <label htmlFor="shortDescription" className="label">
             ShortDescription
           </label>
 
@@ -199,17 +198,17 @@ const CreateBlog = ({ blog }: BlogProps) => {
               <input
                 id="shortDescription"
                 placeholder="A short summary of the blog"
-                className={`${inputClass}`}
+                className="input"
                 {...field}
               />
             )}
           />
           {errors.shortDescription && (
-            <p className={`${errorClass}`}>{errors.shortDescription.message}</p>
+            <p className="error">{errors.shortDescription.message}</p>
           )}
         </div>
         <div>
-          <label htmlFor="longDescription" className={`${labelClass}`}>
+          <label htmlFor="longDescription" className="label">
             LongDescription
           </label>
           <Controller
@@ -221,17 +220,17 @@ const CreateBlog = ({ blog }: BlogProps) => {
                 id="longDescription"
                 rows={6}
                 placeholder="Write the full blog content"
-                className={`${inputClass}`}
+                className="input"
                 {...field}
               />
             )}
           />
           {errors.longDescription && (
-            <p className={`${errorClass}`}>{errors.longDescription.message}</p>
+            <p className="error">{errors.longDescription.message}</p>
           )}
         </div>
         <div>
-          <label htmlFor="tags" className={`${labelClass}`}>
+          <label htmlFor="tags" className="label">
             Tags
           </label>
           <Controller
@@ -241,7 +240,7 @@ const CreateBlog = ({ blog }: BlogProps) => {
               <input
                 id="tags"
                 placeholder="e.g. Web Dev"
-                className={`${inputClass}`}
+                className="input"
                 {...field}
                 value={field.value ?? ""}
               />
@@ -251,14 +250,14 @@ const CreateBlog = ({ blog }: BlogProps) => {
             Optional — shown as a badge on the blog card.
           </p>
           {errors.tags && (
-            <p className={`${errorClass}`}>{errors.tags.message}</p>
+            <p className="error">{errors.tags.message}</p>
           )}
         </div>
         <button
           title="CreateBlog"
           type="submit"
           disabled={isSubmitting}
-          className={`mt-2 w-full ${primaryButton}`}
+          className="mt-2 w-full btn-primary"
         >
           {isSubmitting ? "Saving..." : isEdit ? "Save\u00A0Changes" : "Create\u00A0Blog"}
         </button>

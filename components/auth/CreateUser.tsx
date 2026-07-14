@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "@/schemas/signupSchema";
 import { registerUser } from "@/lib/actions/Auth.action";
 import { useRouter } from "next/navigation";
-import { inputClass, labelClass, errorClass, primaryButton } from "@/lib/ui";
 
 type SignUpFormData = z.infer<typeof signupSchema>;
 
@@ -65,7 +64,7 @@ const CreateUser = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
-              <label htmlFor="firstName" className={labelClass}>
+              <label htmlFor="firstName" className="label">
                 First Name
               </label>
               <Controller
@@ -77,18 +76,18 @@ const CreateUser = () => {
                     id="fname"
                     type="text"
                     placeholder="Enter your first name"
-                    className={inputClass}
+                    className="input"
                     {...field}
                   />
                 )}
               />
               {errors.fname && (
-                <p className={errorClass}>{errors.fname.message}</p>
+                <p className="error">{errors.fname.message}</p>
               )}
             </div>
 
             <div>
-              <label htmlFor="lastName" className={labelClass}>
+              <label htmlFor="lastName" className="label">
                 Last Name
               </label>
               <Controller
@@ -100,19 +99,19 @@ const CreateUser = () => {
                     id="lname"
                     type="text"
                     placeholder="Enter your last name"
-                    className={inputClass}
+                    className="input"
                     {...field}
                   />
                 )}
               />
               {errors.lname && (
-                <p className={errorClass}>{errors.lname.message}</p>
+                <p className="error">{errors.lname.message}</p>
               )}
             </div>
           </div>
 
           <div>
-            <label htmlFor="username" className={labelClass}>
+            <label htmlFor="username" className="label">
               Username
             </label>
             <Controller
@@ -124,18 +123,18 @@ const CreateUser = () => {
                   id="username"
                   type="text"
                   placeholder="Enter your username"
-                  className={inputClass}
+                  className="input"
                   {...field}
                 />
               )}
             />
             {errors.username && (
-              <p className={errorClass}>{errors.username.message}</p>
+              <p className="error">{errors.username.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="email" className={labelClass}>
+            <label htmlFor="email" className="label">
               Email Address
             </label>
             <Controller
@@ -147,18 +146,18 @@ const CreateUser = () => {
                   id="email"
                   type="text"
                   placeholder="someone@example.com"
-                  className={inputClass}
+                  className="input"
                   {...field}
                 />
               )}
             />
             {errors.email && (
-              <p className={errorClass}>{errors.email.message}</p>
+              <p className="error">{errors.email.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="password" className={labelClass}>
+            <label htmlFor="password" className="label">
               Password
             </label>
             <Controller
@@ -170,17 +169,17 @@ const CreateUser = () => {
                   id="password"
                   type="password"
                   placeholder="Enter password"
-                  className={inputClass}
+                  className="input"
                   {...field}
                 />
               )}
             />
             {errors.password && (
-              <p className={errorClass}>{errors.password.message}</p>
+              <p className="error">{errors.password.message}</p>
             )}
           </div>
 
-          <button type="submit" className={`mt-2 w-full ${primaryButton}`}>
+          <button type="submit" className="mt-2 w-full btn-primary">
             Register
           </button>
         </form>

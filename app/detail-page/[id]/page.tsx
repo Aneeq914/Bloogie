@@ -1,3 +1,4 @@
+import { BlogTags } from "@/components";
 import { getBlog } from "@/lib/actions/Blog.action";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -70,6 +71,7 @@ export default async function DetailsPage({
         <div className="whitespace-pre-line text-base leading-relaxed text-gray-800">
           {details.longDescription}
         </div>
+        <BlogTags/>
       </article>
     </div>
   );

@@ -1,7 +1,7 @@
 export default function TagDetails() {
   return (
     <div>
-      TagDetails
+      <p>a small description for the selected tag</p>
     </div>
   );
 }
