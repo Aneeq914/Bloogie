@@ -4,6 +4,7 @@ export const blogPostSchema = z.object({
   title: z.string().min(1, "Title is required"),
   author: z
     .string()
+    .trim()
     .min(1, "Author is required")
     .regex(/^[A-Za-z]+(?:[ '.-][A-Za-z]+)*$/, {
       message: "Invalid author name",
