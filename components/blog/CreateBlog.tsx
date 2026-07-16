@@ -11,9 +11,11 @@ import { AllBlogProps } from "@/type";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import CreatableSelect from "react-select/creatable";
+import { toast } from "sonner";
 
 interface BlogProps {
   blog?: Omit<AllBlogProps, "createdAt" | "updatedAt">;
+  username: string;
 }
 
 type BlogFormData = z.infer<typeof blogPostSchema>;
@@ -27,7 +29,7 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
-const CreateBlog = ({ blog }: BlogProps) => {
+const CreateBlog = ({ blog, username }: BlogProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [preview, setPreview] = useState(blog?.image || "");
 
@@ -42,7 +44,6 @@ const CreateBlog = ({ blog }: BlogProps) => {
     resolver: zodResolver(blogPostSchema),
     defaultValues: {
       title: blog?.title ?? "",
-      author: blog?.author ?? "",
       image: blog?.image ?? "",
       shortDescription: blog?.shortDescription ?? "",
       longDescription: blog?.longDescription ?? "",
@@ -52,23 +53,24 @@ const CreateBlog = ({ blog }: BlogProps) => {
 
   const onSubmit = async (data: BlogFormData) => {
     setIsSubmitting(true);
-    try {
-      await updateBlog({
-        id: blog?.id,
-        title: data.title,
-        author: data.author,
-        image: data.image,
-        shortDescription: data.shortDescription,
-        longDescription: data.longDescription,
-        publishedAt: new Date(),
-        tags: data.tags,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsSubmitting(false);
-      router.push("/author-dashboard");
+    const result = await updateBlog({
+      id: blog?.id,
+      title: data.title,
+      image: data.image,
+      shortDescription: data.shortDescription,
+      longDescription: data.longDescription,
+      publishedAt: new Date(),
+      tags: data.tags,
+    });
+    setIsSubmitting(false);
+
+    if (!result.success) {
+      toast.error(result.message);
+      return;
     }
+
+    toast.success(result.message);
+    router.push("/author-dashboard");
   };
   const isEdit = Boolean(blog);
 
@@ -132,21 +134,12 @@ const CreateBlog = ({ blog }: BlogProps) => {
           <label htmlFor="author" className="label">
             Author
           </label>
-
-          <Controller
-            name="author"
-            rules={{ required: true }}
-            control={control}
-            render={({ field }) => (
-              <input
-                id="author"
-                placeholder="Enter the author's name"
-                className="input"
-                {...field}
-              />
-            )}
+          <input
+            id="author"
+            value={username}
+            disabled
+            className="input disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500"
           />
-          {errors.author && <p className="error">{errors.author.message}</p>}
         </div>
         <div>
           <label htmlFor="image" className="label">

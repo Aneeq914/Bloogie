@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type LoginFormData = z.infer<typeof LoginSchema>;
 
@@ -12,7 +13,6 @@ const LoginUser = () => {
   const {
     control,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(LoginSchema),
@@ -25,19 +25,18 @@ const LoginUser = () => {
   const router = useRouter();
 
   const onSubmit = async (data: LoginFormData) => {
-    try {
-      const res = await loginUser({
-        email: data.email,
-        password: data.password,
-      });
-      if (!res.success) {
-        setError("root", { message: res.message });
-        return;
-      }
-      router.push("/");
-    } catch (error) {
-      console.log(error);
+    const res = await loginUser({
+      email: data.email,
+      password: data.password,
+    });
+
+    if (!res.success) {
+      toast.error(res.message);
+      return;
     }
+
+    toast.success(res.message);
+    router.push("/");
   };
 
   return (
@@ -95,7 +94,6 @@ const LoginUser = () => {
             {errors.password && (
               <p className="error">{errors.password.message}</p>
             )}
-            {errors.root && <p className="error">{errors.root.message}</p>}
           </div>
 
           <button type="submit" className="w-full btn-primary">

@@ -1,5 +1,6 @@
 import { BlogTags } from "@/components";
 import { getBlog } from "@/lib/actions/Blog.action";
+import { getSession } from "@/lib/dal";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +13,8 @@ export default async function DetailsPage({
   await new Promise((resolve) => setTimeout(resolve, 1500));
   const { id } = await params;
   const details = await getBlog(id);
-  if (!details)
+  const session = await getSession();
+  if (!details || (!details.published && details.authorId !== session?.id))
     return (
       <div className="mx-auto flex max-w-3xl flex-col items-center px-4 py-24 text-center">
         <p className="text-lg font-medium text-gray-900">Blog not found</p>
@@ -47,7 +49,12 @@ export default async function DetailsPage({
           </h1>
 
           <div className="mt-5 flex items-center gap-3 text-sm text-gray-500">
-            <span className="font-medium text-gray-700">{details.author}</span>
+            <Link
+              href={`/author/${details.authorId}`}
+              className="font-medium text-gray-700 transition hover:text-brand-600"
+            >
+              {details.author}
+            </Link>
             <time className="text-gray-400">
               {dayjs(details.publishedAt).format("MMM DD, YYYY")}
             </time>

@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "@/schemas/signupSchema";
 import { registerUser } from "@/lib/actions/Auth.action";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type SignUpFormData = z.infer<typeof signupSchema>;
 
@@ -45,12 +46,19 @@ const CreateUser = () => {
     });
 
     if (!res.success) {
-      setError(res.field === "username" ? "username" : "email", {
-        message: res.message,
-      });
+      // A duplicate username/email belongs on the field itself; anything else
+      // has no field to point at, so it goes to a toast.
+      if (res.field) {
+        setError(res.field === "username" ? "username" : "email", {
+          message: res.message,
+        });
+      } else {
+        toast.error(res.message);
+      }
       return;
     }
 
+    toast.success(res.message);
     router.push("/login");
   };
 

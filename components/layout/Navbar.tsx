@@ -2,6 +2,7 @@ import { getSession } from "@/lib/dal";
 import Link from "next/link";
 import UserProfile from "../profile/UserProfile";
 import SignUpTypes from "../auth/SignUpTypes";
+import DashboardToggle from "./DashboardToggle";
 
 const Navbar = async ({ isLoggedIn }: { isLoggedIn: boolean }) => {
    const session = await getSession();
@@ -19,12 +20,7 @@ const Navbar = async ({ isLoggedIn }: { isLoggedIn: boolean }) => {
           </Link>
           <div className="flex items-center gap-3">
             {isLoggedIn && session?.userType === "author" ? (
-              <Link
-                href="/author-dashboard"
-                className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition hover:border-brand-500 hover:bg-brand-50 hover:text-brand-600"
-              >
-                Author Dashboard
-              </Link>
+              <DashboardToggle />
             ) : null}
             {isLoggedIn ? <UserProfile /> : <SignUpTypes />}
           </div>

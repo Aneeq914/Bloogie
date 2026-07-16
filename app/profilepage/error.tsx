@@ -1,14 +1,25 @@
 "use client";
-import { useEffect } from "react";
 
-export default function Error({ error }: { error: Error }) {
+import { useEffect } from "react";
+import ErrorState from "@/components/layout/ErrorState";
+
+export default function Error({
+  error,
+  unstable_retry,
+}: {
+  error: Error & { digest?: string };
+  unstable_retry: () => void;
+}) {
   useEffect(() => {
-    console.log(error);
+    console.error(error);
   }, [error]);
 
   return (
-    <div className=" flex items-center justify-center h-screen">
-      <div className="text-2xl text-red-500">Error Fetching User Data</div>
-    </div>
+    <ErrorState
+      title="Couldn't load your profile"
+      description="Your details are safe — we just couldn't fetch them right now. Try again."
+      digest={error.digest}
+      retry={unstable_retry}
+    />
   );
 }

@@ -1,35 +1,35 @@
 "use server";
 
-import { CreateBlogProps } from "@/type";
+import { ActionResult, CreateBlogProps } from "@/type";
 import { connectToDB } from "../dbConnect";
 import Blog from "@/models/Blog";
 import { revalidatePath } from "next/cache";
 import { Types } from "mongoose";
-import { getSession } from "../dal";
-import { success } from "zod";
+import { getCurrentUser, getSession } from "../dal";
 
 export async function updateBlog({
   id,
-  author,
   title,
   image,
   shortDescription,
   longDescription,
   publishedAt,
   tags,
-}: CreateBlogProps): Promise<void> {
+}: CreateBlogProps): Promise<ActionResult> {
   await connectToDB();
-
-  // The owner comes from the signed session cookie, never from the form — a
-  // client-supplied authorId could claim any author's blogs.
   const session = await getSession();
-  if (!session?.id) throw new Error("Not authenticated");
+  if (!session?.id)
+    return { success: false, message: "Log in again to continue" };
   const authorId = session.id as string;
+  const user = await getCurrentUser();
 
   if (id) {
-    const existing = await Blog.findById(id).select("authorId").lean();
+    const existing = await Blog.findById(id).select("authorId published").lean();
     if (existing && String(existing.authorId) !== authorId) {
-      throw new Error("Cannot edit another author's blog");
+      return { success: false, message: "You can only edit your own blogs" };
+    }
+    if (existing?.published) {
+      return { success: false, message: "Unpublish this blog before editing it" };
     }
   }
 
@@ -37,7 +37,7 @@ export async function updateBlog({
     await Blog.findByIdAndUpdate(
       id ?? new Types.ObjectId(),
       {
-        author,
+        author: user.username,
         authorId,
         title,
         image,
@@ -49,15 +49,17 @@ export async function updateBlog({
       { upsert: true, new: true, setDefaultsOnInsert: true },
     );
     revalidatePath("/");
+    return { success: true, message: id ? "Blog updated" : "Blog created" };
   } catch (error) {
     console.log(error);
+    return { success: false, message: "Couldn't save your blog — please try again" };
   }
 }
 
 export async function getBlogTags() {
   await connectToDB();
   try {
-    return await Blog.distinct("tags");
+    return await Blog.distinct("tags", { published: true });
   } catch (error) {
     console.log(error);
   }
@@ -67,11 +69,14 @@ export async function getBlogs() {
   //All blogs
   await connectToDB();
   try {
-    const blogs = await Blog.find({}).sort({ createdAt: -1 }).lean();
+    const blogs = await Blog.find({ published: true })
+      .sort({ createdAt: -1 })
+      .lean();
     return blogs.map((blog) => ({
       id: blog._id.toString(),
       title: blog.title,
       author: blog.author,
+      authorId: blog.authorId.toString(),
       image: blog.image,
       shortDescription: blog.shortDescription,
       longDescription: blog.longDescription,
@@ -93,10 +98,12 @@ export async function getBlog(id: string) {
       id: blog._id.toString(),
       title: blog.title,
       author: blog.author,
+      authorId: blog.authorId.toString(),
       image: blog.image,
       shortDescription: blog.shortDescription,
       longDescription: blog.longDescription,
       publishedAt: blog.publishedAt,
+      published: blog.published,
       tags: blog.tags,
     };
   } catch (error) {
@@ -116,6 +123,7 @@ export async function getBlogsByAuthor(authorId: string) {
       shortDescription: blog.shortDescription,
       longDescription: blog.longDescription,
       publishedAt: blog.publishedAt,
+      published: blog.published,
       tags: blog.tags,
     }));
   } catch (error) {
@@ -123,13 +131,76 @@ export async function getBlogsByAuthor(authorId: string) {
   }
 }
 
-export async function deleteBlog(id: string) {
+// Public author page — drafts must never appear here.
+export async function getPublishedBlogsByAuthor(authorId: string) {
   await connectToDB();
+  try {
+    const blogs = await Blog.find({ authorId, published: true })
+      .sort({ createdAt: -1 })
+      .lean();
+    return blogs.map((blog) => ({
+      id: blog._id.toString(),
+      title: blog.title,
+      author: blog.author,
+      image: blog.image,
+      shortDescription: blog.shortDescription,
+      longDescription: blog.longDescription,
+      publishedAt: blog.publishedAt,
+      tags: blog.tags,
+    }));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function togglePublish(id: string): Promise<ActionResult> {
+  await connectToDB();
+  const session = await getSession();
+  if (!session?.id)
+    return { success: false, message: "Log in again to continue" };
+
+  const blog = await Blog.findById(id).select("authorId published");
+  if (!blog) return { success: false, message: "That blog no longer exists" };
+  if (String(blog.authorId) !== session.id) {
+    return { success: false, message: "You can only publish your own blogs" };
+  }
+
+  try {
+    blog.published = !blog.published;
+    await blog.save();
+    revalidatePath("/");
+    revalidatePath("/author-dashboard");
+    return {
+      success: true,
+      message: blog.published ? "Blog published" : "Blog unpublished",
+    };
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "Couldn't update your blog — please try again" };
+  }
+}
+
+export async function deleteBlog(id: string): Promise<ActionResult> {
+  await connectToDB();
+  const session = await getSession();
+  if (!session?.id)
+    return { success: false, message: "Log in again to continue" };
+
+  const blog = await Blog.findById(id).select("authorId published");
+  if (!blog) return { success: false, message: "That blog no longer exists" };
+  if (String(blog.authorId) !== session.id) {
+    return { success: false, message: "You can only delete your own blogs" };
+  }
+  if (blog.published) {
+    return { success: false, message: "Unpublish this blog before deleting it" };
+  }
+
   try {
     await Blog.findByIdAndDelete(id);
     revalidatePath("/author-dashboard");
+    return { success: true, message: "Blog deleted" };
   } catch (error) {
     console.log(error);
-    return { success: false, message: "Could not delete blog" };
+    return { success: false, message: "Couldn't delete your blog — please try again" };
   }
 }

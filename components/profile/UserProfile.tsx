@@ -2,14 +2,31 @@
 
 import { Logout } from "@/lib/actions/Auth.action";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useSession } from "../auth/SessionProvider";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const UserProfile = () => {
   const user = useSession();
   const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  function handleLogout() {
+    startTransition(async () => {
+      const result = await Logout();
+      setOpen(false);
+
+      if (result.success) {
+        toast.success(result.message);
+        router.push("/");
+        router.refresh();
+      } else toast.error(result.message);
+    });
+  }
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -50,16 +67,15 @@ const UserProfile = () => {
             >
               👤 Edit Profile
             </Link>
-            <form action={Logout}>
-              <hr className="my-2" />
+            <hr className="my-2" />
 
-              <button
-                type="submit"
-                className="flex w-full items-center gap-3 px-5 py-3 text-left text-sm text-red-600 transition hover:bg-red-50"
-              >
-                🚪 Logout
-              </button>
-            </form>
+            <button
+              onClick={handleLogout}
+              disabled={isPending}
+              className="flex w-full items-center gap-3 px-5 py-3 text-left text-sm text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+            >
+              🚪 Logout
+            </button>
           </div>
         </div>
       )}

@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 import DeleteButton from "./DeleteButton";
+import PublishButton from "./PublishButton";
 import BlogTags from "./BlogTags";
 
 const AuthorBlogList = async () => {
@@ -60,6 +61,11 @@ const AuthorBlogList = async () => {
 
                   <div className="flex flex-1 flex-col p-5">
                     <div className="mb-2 flex flex-wrap gap-1.5">
+                      {!blog.published && (
+                        <span className="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-100">
+                          Draft
+                        </span>
+                      )}
                       {blog.tags?.map((tag: string) => (
                         <Link
                           key={tag}
@@ -92,13 +98,16 @@ const AuthorBlogList = async () => {
                   </div>
 
                   <div className="flex items-center justify-end gap-2 px-5 pb-5 text-xs">
-                    <Link
-                      href={`/edit/${blog.id}`}
-                      className="inline-flex items-center rounded-full bg-brand-50 px-3.5 py-1.5 font-medium text-brand-600 transition hover:bg-brand-100"
-                    >
-                      Edit Post
-                    </Link>
-                    <DeleteButton id={`${blog.id}`} />
+                    {!blog.published && (
+                      <Link
+                        href={`/edit/${blog.id}`}
+                        className="inline-flex items-center rounded-full bg-brand-50 px-3.5 py-1.5 font-medium text-brand-600 transition hover:bg-brand-100"
+                      >
+                        Edit Post
+                      </Link>
+                    )}
+                    <PublishButton id={`${blog.id}`} published={blog.published} />
+                    {!blog.published && <DeleteButton id={`${blog.id}`} />}
                   </div>
                 </div>
               ))}

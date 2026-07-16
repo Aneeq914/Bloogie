@@ -1,15 +1,25 @@
-'use client'
+"use client";
 
-import { useEffect } from "react"
+import { useEffect } from "react";
+import ErrorState from "@/components/layout/ErrorState";
 
-export default function Error({error} : {error:Error}){
-    useEffect(()=>{
-        console.log(error);
-        
-    },[error])
-    return(
-        <div className=" flex items-center justify-center h-screen">
-      <div className="text-2xl text-red-500">Error Fetching User Data</div>
-    </div>
-    );
+export default function Error({
+  error,
+  unstable_retry,
+}: {
+  error: Error & { digest?: string };
+  unstable_retry: () => void;
+}) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
+  return (
+    <ErrorState
+      title="Couldn't load this blog for editing"
+      description="Your post is untouched — we just couldn't fetch it. Try again."
+      digest={error.digest}
+      retry={unstable_retry}
+    />
+  );
 }

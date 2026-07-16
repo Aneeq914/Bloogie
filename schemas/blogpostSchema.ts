@@ -1,21 +1,16 @@
 import { z } from "zod";
 
 export const blogPostSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  author: z
-    .string()
-    .trim()
-    .min(1, "Author is required")
-    .regex(/^[A-Za-z]+(?:[ '.-][A-Za-z]+)*$/, {
-      message: "Invalid author name",
-    }),
-  image: z.string().min(1, "Image is required"),
+  title: z.string().trim().min(1, "Title is required"),
+  image: z.string().min(1, "Choose a cover image"),
   shortDescription: z
     .string()
-    .min(10, "A Short Description must be added")
-    .max(150, "Description must not be longer than 150 characters."),
+    .trim()
+    .min(10, "Short description must be at least 10 characters")
+    .max(150, "Short description must be 150 characters or fewer"),
   longDescription: z
     .string()
-    .min(100, "Detailed description must be at least 100 characters long."),
+    .trim()
+    .min(100, "Blog content must be at least 100 characters"),
   tags: z.array(z.string()).optional(),
 });

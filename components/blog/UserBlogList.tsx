@@ -70,9 +70,12 @@ const UserBlogList = async () => {
                     </p>
 
                     <div className="mt-4 flex items-center gap-3 border-t border-gray-100 pt-4 text-xs text-gray-500">
-                      <span className="font-medium text-gray-700">
+                      <Link
+                        href={`/author/${blog.authorId}`}
+                        className="font-medium text-gray-700 transition hover:text-brand-600"
+                      >
                         {blog.author}
-                      </span>
+                      </Link>
                       <time className="text-gray-400">
                         {dayjs(blog.publishedAt).format("MMM DD, YYYY")}
                       </time>

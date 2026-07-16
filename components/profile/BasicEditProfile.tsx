@@ -7,6 +7,7 @@ import { profileSchema } from "@/schemas/profileSchema";
 import { useSession } from "../auth/SessionProvider";
 import { updateUser } from "@/lib/actions/Auth.action";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
@@ -45,13 +46,16 @@ const BasicProfile = () => {
 
   const onSubmit = async (data: ProfileFormData) => {
     const { fname, lname, username, bio, image } = data;
-    await updateUser({
+    const result = await updateUser({
       fname,
       lname,
       username,
       image,
       bio,
     });
+
+    if (result.success) toast.success(result.message);
+    else toast.error(result.message);
   };
 
   return (

@@ -1,5 +1,6 @@
 import { CreateBlog } from "@/components";
 import { getBlog } from "@/lib/actions/Blog.action";
+import { getCurrentUser } from "@/lib/dal";
 
 export default async function EditBlogPost({
   params,
@@ -10,9 +11,10 @@ export default async function EditBlogPost({
   const { id } = await params;
 
   const blog = await getBlog(id);
+  const user = await getCurrentUser();
   return (
     <div>
-      <CreateBlog blog={blog}/>
+      <CreateBlog blog={blog} username={user.username}/>
     </div>
   );
 }
