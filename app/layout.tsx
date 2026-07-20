@@ -4,6 +4,8 @@ import "./globals.css";
 import { Footer, Navbar } from "@/components";
 import { getCurrentUser, getSession } from "@/lib/dal";
 import { SessionProvider } from "@/components/auth/SessionProvider";
+import SessionWatcher from "@/components/auth/SessionWatcher";
+import FooterSlot from "@/components/layout/FooterSlot";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -38,9 +40,12 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <SessionProvider user={user}>
+          <SessionWatcher isLoggedIn={isLoggedIn} />
           <Navbar isLoggedIn={isLoggedIn} />
           {children}
-          <Footer />
+          <FooterSlot>
+            <Footer />
+          </FooterSlot>
           <Toaster
             position="top-center"
             toastOptions={{

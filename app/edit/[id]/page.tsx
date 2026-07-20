@@ -1,6 +1,7 @@
 import { CreateBlog } from "@/components";
 import { getBlog } from "@/lib/actions/Blog.action";
 import { getCurrentUser } from "@/lib/dal";
+import { redirect } from "next/navigation";
 
 export default async function EditBlogPost({
   params,
@@ -12,6 +13,7 @@ export default async function EditBlogPost({
 
   const blog = await getBlog(id);
   const user = await getCurrentUser();
+  if (!user) redirect("/login");
   return (
     <div>
       <CreateBlog blog={blog} username={user.username}/>

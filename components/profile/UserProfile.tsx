@@ -1,6 +1,6 @@
 "use client";
 
-import { Logout, LogoutEverywhere } from "@/lib/actions/Auth.action";
+import { Logout } from "@/lib/actions/Auth.action";
 import Image from "next/image";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useSession } from "../auth/SessionProvider";
@@ -75,14 +75,6 @@ const UserProfile = () => {
               className="flex w-full items-center gap-3 px-5 py-3 text-left text-sm text-red-600 transition hover:bg-red-50 disabled:opacity-50"
             >
               🚪 Logout
-            </button>
-
-            <button
-              onClick={() => handleLogout(LogoutEverywhere)}
-              disabled={isPending}
-              className="flex w-full items-center gap-3 px-5 py-3 text-left text-sm text-red-600 transition hover:bg-red-50 disabled:opacity-50"
-            >
-              🌐 Logout everywhere
             </button>
           </div>
         </div>

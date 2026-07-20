@@ -4,10 +4,12 @@ import { useState, useTransition } from "react";
 import { createPortal } from "react-dom";
 import { deleteBlog } from "@/lib/actions/Blog.action";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function DeleteButton({ id }: { id: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   function handleDelete() {
     startTransition(async () => {
@@ -16,6 +18,7 @@ export default function DeleteButton({ id }: { id: string }) {
 
       if (result.success) toast.success(result.message);
       else toast.error(result.message);
+      if (result.authExpired) router.refresh();
     });
   }
 

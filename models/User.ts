@@ -41,6 +41,10 @@ const UserSchema: Schema<UserProps> = new Schema(
     bio: {
       type: String,
     },
+    tokenVersion: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

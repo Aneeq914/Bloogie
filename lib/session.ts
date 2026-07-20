@@ -13,6 +13,7 @@ export function hashToken(token: string) {
 export async function createToken(payload: {
   id?: string;
   userType?: "user" | "author";
+  tokenVersion?: number;
 }) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
@@ -32,8 +33,12 @@ export async function verifyToken(token: string) {
   }
 }
 
-export async function createSession(id?: string, userType?: "user" | "author") {
-  const token = await createToken({ id, userType });
+export async function createSession(
+  id?: string,
+  userType?: "user" | "author",
+  tokenVersion?: number,
+) {
+  const token = await createToken({ id, userType, tokenVersion });
   const cookieStore = await cookies();
   cookieStore.set("session", token, {
     httpOnly: true,

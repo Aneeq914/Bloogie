@@ -42,6 +42,7 @@ export interface CreateBlogProps {
 export interface ActionResult {
   success: boolean;
   message: string;
+  authExpired?: boolean;
 }
 
 export interface UserProps {
@@ -53,6 +54,7 @@ export interface UserProps {
   userType: "author" | "user";
   image?: string;
   bio?: string;
+  tokenVersion?: number;
 }
 
 export interface RefreshTokenProps {

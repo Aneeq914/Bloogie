@@ -20,7 +20,11 @@ export async function updateBlog({
   await connectToDB();
   const session = await getSession();
   if (!session?.id)
-    return { success: false, message: "Log in again to continue" };
+    return {
+      success: false,
+      message: "Log in again to continue",
+      authExpired: true,
+    };
   const authorId = session.id as string;
   const user = await getCurrentUser();
 
@@ -202,7 +206,11 @@ export async function togglePublish(id: string): Promise<ActionResult> {
   await connectToDB();
   const session = await getSession();
   if (!session?.id)
-    return { success: false, message: "Log in again to continue" };
+    return {
+      success: false,
+      message: "Log in again to continue",
+      authExpired: true,
+    };
 
   const blog = await Blog.findById(id).select("authorId published");
   if (!blog) return { success: false, message: "That blog no longer exists" };
@@ -232,7 +240,11 @@ export async function deleteBlog(id: string): Promise<ActionResult> {
   await connectToDB();
   const session = await getSession();
   if (!session?.id)
-    return { success: false, message: "Log in again to continue" };
+    return {
+      success: false,
+      message: "Log in again to continue",
+      authExpired: true,
+    };
 
   const blog = await Blog.findById(id).select("authorId published");
   if (!blog) return { success: false, message: "That blog no longer exists" };

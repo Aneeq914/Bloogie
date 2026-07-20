@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { createPortal } from "react-dom";
 import { togglePublish } from "@/lib/actions/Blog.action";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function PublishButton({
   id,
@@ -14,6 +15,7 @@ export default function PublishButton({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const action = published ? "Unpublish" : "Publish";
   const buttonColor = published
     ? "bg-amber-50 text-amber-700 hover:bg-amber-100"
@@ -26,6 +28,7 @@ export default function PublishButton({
 
       if (result.success) toast.success(result.message);
       else toast.error(result.message);
+      if (result.authExpired) router.refresh();
     });
   }
 

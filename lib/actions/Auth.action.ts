@@ -9,7 +9,9 @@ import {
   createRefreshToken,
   deleteRefreshToken,
   deleteAllRefreshTokens,
+  hashToken,
 } from "../session";
+import RefreshToken from "@/models/RefreshToken";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { getSession } from "../dal";
@@ -62,7 +64,11 @@ export async function loginUser({
     const isMatch = await bcrypt.compare(password, newUser.password);
     if (!isMatch)
       return { success: false, message: "Email or password is incorrect" };
-    await createSession(newUser._id.toString(), newUser.userType);
+    await createSession(
+      newUser._id.toString(),
+      newUser.userType,
+      newUser.tokenVersion,
+    );
     await createRefreshToken(newUser._id.toString());
     return { success: true, message: "Welcome back" };
   } catch (error) {
@@ -88,7 +94,11 @@ export async function updateUser({
   try {
     const session = await getSession();
     if (!session)
-      return { success: false, message: "You must be logged in" };
+      return {
+        success: false,
+        message: "You must be logged in",
+        authExpired: true,
+      };
     await User.findByIdAndUpdate(session.id as string, {
       fname: fname || undefined,
       lname: lname || undefined,
@@ -138,10 +148,26 @@ export async function Logout(): Promise<ActionResult> {
   }
 }
 
+async function getRevokableUserId() {
+  const session = await getSession();
+  if (session) return session.id as string;
+
+  const token = (await cookies()).get("refresh")?.value;
+  if (!token) return null;
+  const row = await RefreshToken.findOne({ tokenHash: hashToken(token) });
+  return row ? row.userId.toString() : null;
+}
+
 export async function LogoutEverywhere(): Promise<ActionResult> {
   try {
-    const session = await getSession();
-    if (session) await deleteAllRefreshTokens(session.id as string);
+    await connectToDB();
+    const userId = await getRevokableUserId();
+    if (!userId)
+      return { success: false, message: "You must be logged in" };
+
+    await User.findByIdAndUpdate(userId, { $inc: { tokenVersion: 1 } });
+    await deleteAllRefreshTokens(userId);
+
     const cookieStore = await cookies();
     cookieStore.delete("session");
     cookieStore.delete("refresh");

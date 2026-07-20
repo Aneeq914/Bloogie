@@ -69,6 +69,7 @@ const CreateBlog = ({ blog, username }: BlogProps) => {
 
     if (!result.success) {
       toast.error(result.message);
+      if (result.authExpired) router.refresh();
       return;
     }
 

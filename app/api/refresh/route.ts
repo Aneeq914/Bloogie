@@ -22,13 +22,15 @@ export async function GET(request: NextRequest) {
     const row = await RefreshToken.findOne({ tokenHash: hashToken(token) });
 
     if (row && row.expiresAt > new Date()) {
-      const user = await User.findById(row.userId).select("userType");
+      const user = await User.findById(row.userId).select(
+        "userType tokenVersion",
+      );
 
       if (user) {
         const userId = row.userId.toString();
         await deleteRefreshToken();
         await createRefreshToken(userId);
-        await createSession(userId, user.userType);
+        await createSession(userId, user.userType, user.tokenVersion);
         return NextResponse.redirect(new URL(target, request.url));
       }
     }
