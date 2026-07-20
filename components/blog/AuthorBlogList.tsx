@@ -5,17 +5,18 @@ import Image from "next/image";
 import Link from "next/link";
 import DeleteButton from "./DeleteButton";
 import PublishButton from "./PublishButton";
+import Pagination from "./Pagination";
 
-const AuthorBlogList = async () => {
+const AuthorBlogList = async ({ page }: { page: number }) => {
   const session = await getSession();
-  const blogList = session?.id
-    ? await getBlogsByAuthor(session.id as string)
-    : null;
+  const { blogs, totalPages } = session?.id
+    ? ((await getBlogsByAuthor(session.id as string, page)) ?? {})
+    : {};
 
   return (
       <div className="min-h-screen px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-8 flex flex-col gap-1">
+          <div id="blogs" className="mb-8 flex scroll-mt-20 flex-col gap-1">
             <h2 className="text-2xl font-bold tracking-tight text-gray-900">
               Your posts
             </h2>
@@ -24,7 +25,7 @@ const AuthorBlogList = async () => {
             </p>
           </div>
 
-          {!blogList?.length ? (
+          {!blogs?.length ? (
             <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-20 text-center">
               <p className="text-lg font-medium text-gray-900">No posts yet</p>
               <p className="mt-1 text-sm text-gray-500">
@@ -39,7 +40,7 @@ const AuthorBlogList = async () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {blogList.map((blog) => (
+              {blogs.map((blog) => (
                 <div
                   key={blog.id}
                   className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-brand-100 hover:shadow-lg"
@@ -111,6 +112,12 @@ const AuthorBlogList = async () => {
               ))}
             </div>
           )}
+
+          <Pagination
+            page={page}
+            totalPages={totalPages ?? 0}
+            basePath="/author-dashboard"
+          />
         </div>
       </div>
   );

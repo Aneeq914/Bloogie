@@ -90,24 +90,32 @@ export async function getRelatedBlogs(id: string, tags: string[]) {
   }
 }
 
-export async function getBlogs() {
-  //All blogs
+const PAGE_SIZE = 6;
+
+export async function getBlogs(page = 1) {
   await connectToDB();
   try {
-    const blogs = await Blog.find({ published: true })
+    const filter= { published: true };
+    const total = await Blog.countDocuments(filter);
+    const blogs = await Blog.find(filter)
       .sort({ createdAt: -1 })
+      .skip((page - 1) * PAGE_SIZE)
+      .limit(PAGE_SIZE)
       .lean();
-    return blogs.map((blog) => ({
-      id: blog._id.toString(),
-      title: blog.title,
-      author: blog.author,
-      authorId: blog.authorId.toString(),
-      image: blog.image,
-      shortDescription: blog.shortDescription,
-      longDescription: blog.longDescription,
-      publishedAt: blog.publishedAt,
-      tags: blog.tags,
-    }));
+    return {
+      totalPages: Math.ceil(total / PAGE_SIZE),
+      blogs: blogs.map((blog) => ({
+        id: blog._id.toString(),
+        title: blog.title,
+        author: blog.author,
+        authorId: blog.authorId.toString(),
+        image: blog.image,
+        shortDescription: blog.shortDescription,
+        longDescription: blog.longDescription,
+        publishedAt: blog.publishedAt,
+        tags: blog.tags,
+      })),
+    };
   } catch (error) {
     console.log(error);
   }
@@ -136,21 +144,29 @@ export async function getBlog(id: string) {
   }
 }
 
-export async function getBlogsByAuthor(authorId: string) {
+export async function getBlogsByAuthor(authorId: string, page = 1) {
   await connectToDB();
   try {
-    const blogs = await Blog.find({ authorId }).sort({ createdAt: -1 }).lean();
-    return blogs.map((blog) => ({
-      id: blog._id.toString(),
-      title: blog.title,
-      author: blog.author,
-      image: blog.image,
-      shortDescription: blog.shortDescription,
-      longDescription: blog.longDescription,
-      publishedAt: blog.publishedAt,
-      published: blog.published,
-      tags: blog.tags,
-    }));
+    const total = await Blog.countDocuments({ authorId });
+    const blogs = await Blog.find({ authorId })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * PAGE_SIZE)
+      .limit(PAGE_SIZE)
+      .lean();
+    return {
+      totalPages: Math.ceil(total / PAGE_SIZE),
+      blogs: blogs.map((blog) => ({
+        id: blog._id.toString(),
+        title: blog.title,
+        author: blog.author,
+        image: blog.image,
+        shortDescription: blog.shortDescription,
+        longDescription: blog.longDescription,
+        publishedAt: blog.publishedAt,
+        published: blog.published,
+        tags: blog.tags,
+      })),
+    };
   } catch (error) {
     console.log(error);
   }

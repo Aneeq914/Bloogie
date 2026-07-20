@@ -1,7 +1,12 @@
 import { AuthorBlogList } from "@/components";
 import Link from "next/link";
 
-export default function AuthorDashboard() {
+export default async function AuthorDashboard({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page } = await searchParams;
   return (
     <div>
       <div>
@@ -41,7 +46,7 @@ export default function AuthorDashboard() {
         </section>
       </div>
       <div>
-        <AuthorBlogList />
+        <AuthorBlogList page={Number(page) || 1} />
       </div>
     </div>
   );

@@ -26,10 +26,10 @@ export async function verifyToken(token: string) {
 }
 
 export async function createSession(
-  userId?: string,
+  id?: string,
   userType?: "user" | "author",
 ) {
-  const token = await createToken({ id: userId, userType });
+  const token = await createToken({ id, userType });
   const cookieStore = await cookies();
   cookieStore.set("session", token, {
     httpOnly: true,
