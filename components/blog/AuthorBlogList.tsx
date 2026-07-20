@@ -66,13 +66,12 @@ const AuthorBlogList = async () => {
                         </span>
                       )}
                       {blog.tags?.map((tag: string) => (
-                        <Link
+                        <button
                           key={tag}
-                          href={`/tags/${encodeURIComponent(tag)}`}
                           className="inline-flex w-fit items-center rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-600 ring-1 ring-inset ring-brand-100 transition hover:bg-brand-100 hover:text-brand-700"
                         >
                           {tag}
-                        </Link>
+                        </button>
                       ))}
                     </div>
 
