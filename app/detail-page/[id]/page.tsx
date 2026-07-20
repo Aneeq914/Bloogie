@@ -29,7 +29,6 @@ export default async function DetailsPage({
 
   return (
     <div className="relative overflow-hidden bg-linear-to-b from-brand-50/60 via-white to-white">
-      {/* soft decorative glow, matching the hero */}
       <div
         aria-hidden
         className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-500/10 blur-3xl"

@@ -98,13 +98,12 @@ export default async function AuthorPage({
                   <div className="flex flex-1 flex-col p-5">
                     <div className="mb-2 flex flex-wrap gap-1.5">
                       {blog.tags?.map((tag: string) => (
-                        <Link
+                        <button
                           key={tag}
-                          href={`/tags/${encodeURIComponent(tag)}`}
                           className="inline-flex w-fit items-center rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-600 ring-1 ring-inset ring-brand-100 transition hover:bg-brand-100 hover:text-brand-700"
                         >
                           {tag}
-                        </Link>
+                        </button>
                       ))}
                     </div>
 
