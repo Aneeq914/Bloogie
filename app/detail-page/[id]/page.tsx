@@ -1,4 +1,4 @@
-import { BlogTags } from "@/components";
+import { RelatedBlogs } from "@/components";
 import { getBlog } from "@/lib/actions/Blog.action";
 import { getSession } from "@/lib/dal";
 import dayjs from "dayjs";
@@ -78,7 +78,7 @@ export default async function DetailsPage({
         <div className="whitespace-pre-line text-base leading-relaxed text-gray-800">
           {details.longDescription}
         </div>
-        <BlogTags/>
+        <RelatedBlogs id={id} tags={details.tags} />
       </article>
     </div>
   );

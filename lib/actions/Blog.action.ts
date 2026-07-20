@@ -24,12 +24,17 @@ export async function updateBlog({
   const user = await getCurrentUser();
 
   if (id) {
-    const existing = await Blog.findById(id).select("authorId published").lean();
+    const existing = await Blog.findById(id)
+      .select("authorId published")
+      .lean();
     if (existing && String(existing.authorId) !== authorId) {
       return { success: false, message: "You can only edit your own blogs" };
     }
     if (existing?.published) {
-      return { success: false, message: "Unpublish this blog before editing it" };
+      return {
+        success: false,
+        message: "Unpublish this blog before editing it",
+      };
     }
   }
 
@@ -52,14 +57,34 @@ export async function updateBlog({
     return { success: true, message: id ? "Blog updated" : "Blog created" };
   } catch (error) {
     console.log(error);
-    return { success: false, message: "Couldn't save your blog — please try again" };
+    return {
+      success: false,
+      message: "Couldn't save your blog — please try again",
+    };
   }
 }
 
-export async function getBlogTags() {
+// Posts sharing at least one tag with the given post — the current post excluded.
+export async function getRelatedBlogs(id: string, tags: string[]) {
   await connectToDB();
   try {
-    return await Blog.distinct("tags", { published: true });
+    const blogs = await Blog.find({
+      published: true,
+      _id: { $ne: id },
+      tags: { $in: tags },
+    })
+      .sort({ createdAt: -1 })
+      .limit(8)
+      .lean();
+    return blogs.map((blog) => ({
+      id: blog._id.toString(),
+      title: blog.title,
+      author: blog.author,
+      image: blog.image,
+      shortDescription: blog.shortDescription,
+      publishedAt: blog.publishedAt,
+      tags: blog.tags,
+    }));
   } catch (error) {
     console.log(error);
   }
@@ -176,7 +201,10 @@ export async function togglePublish(id: string): Promise<ActionResult> {
     };
   } catch (error) {
     console.log(error);
-    return { success: false, message: "Couldn't update your blog — please try again" };
+    return {
+      success: false,
+      message: "Couldn't update your blog — please try again",
+    };
   }
 }
 
@@ -192,7 +220,10 @@ export async function deleteBlog(id: string): Promise<ActionResult> {
     return { success: false, message: "You can only delete your own blogs" };
   }
   if (blog.published) {
-    return { success: false, message: "Unpublish this blog before deleting it" };
+    return {
+      success: false,
+      message: "Unpublish this blog before deleting it",
+    };
   }
 
   try {
@@ -201,6 +232,9 @@ export async function deleteBlog(id: string): Promise<ActionResult> {
     return { success: true, message: "Blog deleted" };
   } catch (error) {
     console.log(error);
-    return { success: false, message: "Couldn't delete your blog — please try again" };
+    return {
+      success: false,
+      message: "Couldn't delete your blog — please try again",
+    };
   }
 }

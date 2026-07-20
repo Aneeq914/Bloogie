@@ -8,7 +8,7 @@ import CreateBlog from "./blog/CreateBlog";
 import AuthorBlogList from "./blog/AuthorBlogList";
 import DeletePost from "./blog/DeleteButton";
 import UserBlogList from "./blog/UserBlogList";
-import BlogTags from "./blog/BlogTags";
+import RelatedBlogs from "./blog/RelatedBlogs";
 
 // Auth
 import CreateUser from "./auth/CreateUser";
@@ -38,5 +38,5 @@ export {
   BasicProfile,
   AccountProfile,
   UserBlogList,
-  BlogTags,
+  RelatedBlogs,
 };

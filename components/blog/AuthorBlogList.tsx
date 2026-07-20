@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import DeleteButton from "./DeleteButton";
 import PublishButton from "./PublishButton";
-import BlogTags from "./BlogTags";
 
 const AuthorBlogList = async () => {
   const session = await getSession();

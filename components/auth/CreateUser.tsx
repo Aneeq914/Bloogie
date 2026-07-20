@@ -46,8 +46,6 @@ const CreateUser = () => {
     });
 
     if (!res.success) {
-      // A duplicate username/email belongs on the field itself; anything else
-      // has no field to point at, so it goes to a toast.
       if (res.field) {
         setError(res.field === "username" ? "username" : "email", {
           message: res.message,
