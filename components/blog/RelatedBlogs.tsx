@@ -1,4 +1,5 @@
 import { getRelatedBlogs } from "@/lib/actions/Blog.action";
+import Carousel from "./Carousel";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,20 +20,20 @@ const RelatedBlogs = async ({ id, tags }: { id: string; tags?: string[] }) => {
       </div>
 
       <div className="rounded-3xl bg-gray-100 p-6 sm:p-8">
-        <div className="-mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 sm:-mx-8 sm:px-8">
+        <Carousel>
           {blogs.map((blog) => (
             <div
               key={blog.id}
-              className="group flex w-72 shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-brand-100 hover:shadow-lg"
+              className="group flex w-full shrink-0 flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:border-brand-100 hover:shadow-lg"
             >
               <Link href={`/detail-page/${blog.id}`} className="block">
-                <div className="relative h-40 w-full overflow-hidden">
+                <div className="relative h-56 w-full overflow-hidden">
                   <Image
                     src={blog.image}
                     alt={blog.title}
                     fill
                     unoptimized
-                    sizes="288px"
+                    sizes="(min-width: 768px) 768px, 100vw"
                     className="object-cover transition duration-300 group-hover:scale-105"
                   />
                 </div>
@@ -60,7 +61,7 @@ const RelatedBlogs = async ({ id, tags }: { id: string; tags?: string[] }) => {
               </div>
             </div>
           ))}
-        </div>
+        </Carousel>
       </div>
     </div>
   );
