@@ -4,7 +4,12 @@ import { ActionResult, UserProps } from "@/type";
 import { connectToDB } from "../dbConnect";
 import User from "@/models/User";
 import { cookies } from "next/headers";
-import { createSession } from "../session";
+import {
+  createSession,
+  createRefreshToken,
+  deleteRefreshToken,
+  deleteAllRefreshTokens,
+} from "../session";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { getSession } from "../dal";
@@ -58,6 +63,7 @@ export async function loginUser({
     if (!isMatch)
       return { success: false, message: "Email or password is incorrect" };
     await createSession(newUser._id.toString(), newUser.userType);
+    await createRefreshToken(newUser._id.toString());
     return { success: true, message: "Welcome back" };
   } catch (error) {
     console.log(error);
@@ -121,9 +127,25 @@ export async function getAuthorProfile(id: string) {
 
 export async function Logout(): Promise<ActionResult> {
   try {
+    await deleteRefreshToken();
     const cookieStore = await cookies();
     cookieStore.delete("session");
+    cookieStore.delete("refresh");
     return { success: true, message: "Signed out" };
+  } catch (error) {
+    console.log(error);
+    return { success: false, message: "Couldn't sign you out — please try again" };
+  }
+}
+
+export async function LogoutEverywhere(): Promise<ActionResult> {
+  try {
+    const session = await getSession();
+    if (session) await deleteAllRefreshTokens(session.id as string);
+    const cookieStore = await cookies();
+    cookieStore.delete("session");
+    cookieStore.delete("refresh");
+    return { success: true, message: "Signed out on all devices" };
   } catch (error) {
     console.log(error);
     return { success: false, message: "Couldn't sign you out — please try again" };

@@ -1,11 +1,11 @@
 "use client";
 
-import { CATEGORIES } from "@/type";
+import { CATEGORIES, type Category } from "@/type";
 
 // The only client code in the filter: submit the surrounding <Form> as soon as
 // a category is picked, so no "Filter" button is needed. Without JS the select
 // still works — it just needs the form's own submit to apply.
-const CategorySelect = ({ category }: { category?: string }) => (
+const CategorySelect = ({ category }: { category?: Category }) => (
   <select
     name="category"
     defaultValue={category ?? ""}

@@ -1,6 +1,6 @@
 "use server";
 
-import { ActionResult, CreateBlogProps } from "@/type";
+import { ActionResult, CreateBlogProps, type Category } from "@/type";
 import { connectToDB } from "../dbConnect";
 import Blog from "@/models/Blog";
 import { revalidatePath } from "next/cache";
@@ -94,7 +94,7 @@ export async function getRelatedBlogs(id: string, tags: string[]) {
 
 const PAGE_SIZE = 6;
 
-export async function getBlogs(page = 1, category?: string) {
+export async function getBlogs(page = 1, category?: Category) {
   await connectToDB();
   try {
     const filter = category ? { published: true, category } : { published: true };

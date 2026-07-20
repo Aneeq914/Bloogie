@@ -4,13 +4,14 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import Pagination from "./Pagination";
 import CategoryFilter from "./CategoryFilter";
+import { type Category } from "@/type";
 
 const UserBlogList = async ({
   page,
   category,
 }: {
   page: number;
-  category?: string;
+  category?: Category;
 }) => {
   const { blogs, totalPages } = (await getBlogs(page, category)) ?? {};
   return (
@@ -114,7 +115,7 @@ const UserBlogList = async ({
             page={page}
             totalPages={totalPages ?? 0}
             basePath="/"
-            category={category}
+            params={category ? { category } : undefined}
           />
         </div>
       </div>

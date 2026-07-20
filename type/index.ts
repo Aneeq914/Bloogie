@@ -1,3 +1,5 @@
+import type { Types } from "mongoose";
+
 export const CATEGORIES = [
   "Technology",
   "Design",
@@ -51,4 +53,10 @@ export interface UserProps {
   userType: "author" | "user";
   image?: string;
   bio?: string;
+}
+
+export interface RefreshTokenProps {
+  userId: Types.ObjectId;
+  tokenHash: string;
+  expiresAt: Date;
 }

@@ -1,10 +1,11 @@
 import Form from "next/form";
 import CategorySelect from "./CategorySelect";
+import { type Category } from "@/type";
 
 // Server component — `next/form` with a string action is a GET form, so the
 // selected category is encoded into the URL as ?category=... on submit.
 // No `page` field, so switching category always restarts at page 1.
-const CategoryFilter = ({ category }: { category?: string }) => (
+const CategoryFilter = ({ category }: { category?: Category }) => (
   <Form action="/" scroll={false} className="w-full sm:w-auto">
     <div className="relative w-full sm:w-auto">
       <CategorySelect category={category} />

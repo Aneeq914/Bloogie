@@ -6,23 +6,33 @@ const Author_Only = ["/create-blog", "/edit", "/author-dashboard"];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const needAuthor = Author_Only.some((p) => pathname.startsWith(p));
   const token = request.cookies.get("session")?.value;
 
-  if (!token) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
   let userType: string | undefined;
-  try {
-    const { payload } = await jwtVerify(token, secret, {
-      algorithms: ["HS256"],
-    });
-    userType = payload.userType as string | undefined;
-  } catch {
-    return NextResponse.redirect(new URL("/login", request.url));
+  if (token) {
+    try {
+      const { payload } = await jwtVerify(token, secret, {
+        algorithms: ["HS256"],
+      });
+      userType = payload.userType as string | undefined;
+    } catch {
+      userType = undefined;
+    }
   }
 
-  const needAuthor = Author_Only.some((p) => pathname.startsWith(p));
+  if (!userType) {
+    if (request.cookies.get("refresh")) {
+      const url = new URL("/api/refresh", request.url);
+      url.searchParams.set("next", pathname);
+      return NextResponse.redirect(url);
+    }
+    if (needAuthor) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+    return NextResponse.next();
+  }
+
   if (needAuthor && userType !== "author") {
     return NextResponse.redirect(new URL("/", request.url));
   }
@@ -30,5 +40,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/create-blog/:path*", "/edit/:path*", "/author-dashboard/:path*"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { Logout } from "@/lib/actions/Auth.action";
+import { Logout, LogoutEverywhere } from "@/lib/actions/Auth.action";
 import Image from "next/image";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useSession } from "../auth/SessionProvider";
@@ -15,9 +15,9 @@ const UserProfile = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  function handleLogout() {
+  function handleLogout(action: typeof Logout) {
     startTransition(async () => {
-      const result = await Logout();
+      const result = await action();
       setOpen(false);
 
       if (result.success) {
@@ -70,11 +70,19 @@ const UserProfile = () => {
             <hr className="my-2" />
 
             <button
-              onClick={handleLogout}
+              onClick={() => handleLogout(Logout)}
               disabled={isPending}
               className="flex w-full items-center gap-3 px-5 py-3 text-left text-sm text-red-600 transition hover:bg-red-50 disabled:opacity-50"
             >
               🚪 Logout
+            </button>
+
+            <button
+              onClick={() => handleLogout(LogoutEverywhere)}
+              disabled={isPending}
+              className="flex w-full items-center gap-3 px-5 py-3 text-left text-sm text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+            >
+              🌐 Logout everywhere
             </button>
           </div>
         </div>

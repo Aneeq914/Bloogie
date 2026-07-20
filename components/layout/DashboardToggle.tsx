@@ -7,13 +7,21 @@ import { usePathname } from "next/navigation";
 // half that depends on the path lives here.
 const DashboardToggle = () => {
   const onDashboard = usePathname() === "/author-dashboard";
+  const target = onDashboard ? "User" : "Author";
 
   return (
     <Link
       href={onDashboard ? "/" : "/author-dashboard"}
-      className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-bold text-gray-700 transition hover:border-brand-500 hover:bg-brand-50 hover:text-brand-600"
+      title={`Switch to ${target} Dashboard`}
+      className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:border-brand-100 hover:bg-brand-50 hover:text-brand-600"
     >
-      {onDashboard ? "Switch to User Dashboard" : "Switch to Author Dashboard"}
+      <span aria-hidden className="text-gray-400">
+        ⇄
+      </span>
+      {/* The full phrase is too wide for a phone navbar, so drop to just the
+          destination once the logo and avatar are competing for room. */}
+      <span className="hidden sm:inline">Switch to {target} Dashboard</span>
+      <span className="sm:hidden">{target}</span>
     </Link>
   );
 };

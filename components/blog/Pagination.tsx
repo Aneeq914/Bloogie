@@ -4,25 +4,29 @@ const Pagination = ({
   page,
   totalPages,
   basePath,
-  category,
+  params,
 }: {
   page: number;
   totalPages: number;
   basePath: string;
-  category?: string;
+  // Any active filters to carry across page changes. Kept generic so a new
+  // filter doesn't silently get dropped the way `category` once was.
+  params?: Record<string, string>;
 }) => {
   if (totalPages < 2) return null;
 
-  const categoryParam = category
-    ? `&category=${encodeURIComponent(category)}`
-    : "";
+  const href = (n: number) => {
+    const query = new URLSearchParams(params);
+    query.set("page", String(n));
+    return `${basePath}?${query}#blogs`;
+  };
 
   return (
     <nav className="mt-10 flex justify-center gap-1">
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
         <Link
           key={n}
-          href={`${basePath}?page=${n}${categoryParam}#blogs`}
+          href={href(n)}
           className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition ${
             n === page
               ? "bg-brand-600 text-white"
