@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "migrate": "tsx --env-file=.env.local migrations/addTags.ts"
+    "migrate": "tsx --env-file=.env.local migrations/addCategory.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",

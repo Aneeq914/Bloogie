@@ -7,10 +7,11 @@ import { useState } from "react";
 import { blogPostSchema } from "@/schemas/blogpostSchema";
 import Link from "next/link";
 import { updateBlog } from "@/lib/actions/Blog.action";
-import { AllBlogProps } from "@/type";
+import { AllBlogProps, CATEGORIES } from "@/type";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import CreatableSelect from "react-select/creatable";
+import Select from "react-select";
 import { toast } from "sonner";
 
 interface BlogProps {
@@ -48,6 +49,7 @@ const CreateBlog = ({ blog, username }: BlogProps) => {
       shortDescription: blog?.shortDescription ?? "",
       longDescription: blog?.longDescription ?? "",
       tags: blog?.tags ?? [],
+      category: blog?.category,
     },
   });
 
@@ -61,6 +63,7 @@ const CreateBlog = ({ blog, username }: BlogProps) => {
       longDescription: data.longDescription,
       publishedAt: new Date(),
       tags: data.tags,
+      category: data.category,
     });
     setIsSubmitting(false);
 
@@ -219,6 +222,32 @@ const CreateBlog = ({ blog, username }: BlogProps) => {
 
           {errors.longDescription && (
             <p className="error">{errors.longDescription.message}</p>
+          )}
+        </div>
+        <div>
+          <label htmlFor="category" className="label">
+            Category
+          </label>
+          <Controller
+            name="category"
+            control={control}
+            render={({ field }) => (
+              <Select
+                instanceId="category"
+                placeholder="Pick one category"
+                options={CATEGORIES.map((c) => ({ label: c, value: c }))}
+                value={
+                  field.value
+                    ? { label: field.value, value: field.value }
+                    : null
+                }
+                onChange={(o) => field.onChange(o?.value)}
+                onBlur={field.onBlur}
+              />
+            )}
+          />
+          {errors.category && (
+            <p className="error">{errors.category.message}</p>
           )}
         </div>
         <div>

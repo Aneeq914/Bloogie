@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { AllBlogProps } from "@/type";
+import { AllBlogProps, CATEGORIES } from "@/type";
 
 const blogSchema: Schema<AllBlogProps> = new Schema(
   {
@@ -44,6 +44,12 @@ const blogSchema: Schema<AllBlogProps> = new Schema(
     tags: {
       type: [String],
       default: [],
+    },
+    category: {
+      type: String,
+      enum: CATEGORIES,
+      required: [true, "category is required"],
+      index: true,
     },
   },
   {

@@ -15,6 +15,7 @@ export async function updateBlog({
   longDescription,
   publishedAt,
   tags,
+  category,
 }: CreateBlogProps): Promise<ActionResult> {
   await connectToDB();
   const session = await getSession();
@@ -50,6 +51,7 @@ export async function updateBlog({
         longDescription,
         publishedAt,
         tags,
+        category,
       },
       { upsert: true, new: true, setDefaultsOnInsert: true },
     );
@@ -92,10 +94,10 @@ export async function getRelatedBlogs(id: string, tags: string[]) {
 
 const PAGE_SIZE = 6;
 
-export async function getBlogs(page = 1) {
+export async function getBlogs(page = 1, category?: string) {
   await connectToDB();
   try {
-    const filter= { published: true };
+    const filter = category ? { published: true, category } : { published: true };
     const total = await Blog.countDocuments(filter);
     const blogs = await Blog.find(filter)
       .sort({ createdAt: -1 })
@@ -114,6 +116,7 @@ export async function getBlogs(page = 1) {
         longDescription: blog.longDescription,
         publishedAt: blog.publishedAt,
         tags: blog.tags,
+        category: blog.category,
       })),
     };
   } catch (error) {
@@ -138,6 +141,7 @@ export async function getBlog(id: string) {
       publishedAt: blog.publishedAt,
       published: blog.published,
       tags: blog.tags,
+      category: blog.category,
     };
   } catch (error) {
     console.log(error);

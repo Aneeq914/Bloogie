@@ -4,19 +4,25 @@ const Pagination = ({
   page,
   totalPages,
   basePath,
+  category,
 }: {
   page: number;
   totalPages: number;
   basePath: string;
+  category?: string;
 }) => {
   if (totalPages < 2) return null;
+
+  const categoryParam = category
+    ? `&category=${encodeURIComponent(category)}`
+    : "";
 
   return (
     <nav className="mt-10 flex justify-center gap-1">
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
         <Link
           key={n}
-          href={`${basePath}?page=${n}#blogs`}
+          href={`${basePath}?page=${n}${categoryParam}#blogs`}
           className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition ${
             n === page
               ? "bg-brand-600 text-white"

@@ -1,3 +1,14 @@
+export const CATEGORIES = [
+  "Technology",
+  "Design",
+  "Business",
+  "Lifestyle",
+  "Travel",
+  "Food",
+] as const;
+
+export type Category = (typeof CATEGORIES)[number];
+
 export interface AllBlogProps {
   id: string;
   title: string;
@@ -11,6 +22,7 @@ export interface AllBlogProps {
   publishedAt: Date;
   published?: boolean;
   tags?: string[];
+  category: Category;
 }
 
 export interface CreateBlogProps {
@@ -22,6 +34,7 @@ export interface CreateBlogProps {
   publishedAt: Date;
   published?: boolean;
   tags?: string[];
+  category: Category;
 }
 
 export interface ActionResult {

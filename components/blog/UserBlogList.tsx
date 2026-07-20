@@ -3,9 +3,16 @@ import { getBlogs } from "@/lib/actions/Blog.action";
 import Link from "next/link";
 import dayjs from "dayjs";
 import Pagination from "./Pagination";
+import CategoryFilter from "./CategoryFilter";
 
-const UserBlogList = async ({ page }: { page: number }) => {
-  const { blogs, totalPages } = (await getBlogs(page)) ?? {};
+const UserBlogList = async ({
+  page,
+  category,
+}: {
+  page: number;
+  category?: string;
+}) => {
+  const { blogs, totalPages } = (await getBlogs(page, category)) ?? {};
   return (
     <div>
       <div className="min-h-screen px-4 py-12 sm:px-6 lg:px-8">
@@ -22,9 +29,8 @@ const UserBlogList = async ({ page }: { page: number }) => {
                 Fresh reads from our community of writers.
               </p>
             </div>
-            <button className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:border-brand-100 hover:text-brand-600">
-              Filters
-            </button>
+
+            <CategoryFilter category={category} />
           </div>
 
           {!blogs?.length ? (
@@ -104,7 +110,12 @@ const UserBlogList = async ({ page }: { page: number }) => {
             </div>
           )}
 
-          <Pagination page={page} totalPages={totalPages ?? 0} basePath="/" />
+          <Pagination
+            page={page}
+            totalPages={totalPages ?? 0}
+            basePath="/"
+            category={category}
+          />
         </div>
       </div>
     </div>
