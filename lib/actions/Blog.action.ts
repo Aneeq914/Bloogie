@@ -1,8 +1,9 @@
 "use server";
 
-import { ActionResult, CreateBlogProps, type Category } from "@/type";
+import { ActionResult, CreateBlogProps } from "@/type";
 import { connectToDB } from "../dbConnect";
 import Blog from "@/models/Blog";
+import CategoryModel from "@/models/Category";
 import { revalidatePath } from "next/cache";
 import { Types } from "mongoose";
 import { getCurrentUser, getSession } from "../dal";
@@ -43,6 +44,8 @@ export async function updateBlog({
     }
   }
 
+  const categoryDoc = await CategoryModel.findOne({ name: category }).select("_id");
+
   try {
     await Blog.findByIdAndUpdate(
       id ?? new Types.ObjectId(),
@@ -56,6 +59,7 @@ export async function updateBlog({
         publishedAt,
         tags,
         category,
+        categoryId: categoryDoc?._id,
       },
       { upsert: true, new: true, setDefaultsOnInsert: true },
     );
@@ -98,10 +102,18 @@ export async function getRelatedBlogs(id: string, tags: string[]) {
 
 const PAGE_SIZE = 6;
 
-export async function getBlogs(page = 1, category?: Category) {
+export async function getCategories() {
+  await connectToDB();
+  const categories = await CategoryModel.find().sort({ name: 1 }).lean();
+  return categories.map((c) => ({ id: c._id.toString(), name: c.name }));
+}
+
+export async function getBlogs(page = 1, categoryId?: string) {
   await connectToDB();
   try {
-    const filter = category ? { published: true, category } : { published: true };
+    const filter = categoryId
+      ? { published: true, categoryId }
+      : { published: true };
     const total = await Blog.countDocuments(filter);
     const blogs = await Blog.find(filter)
       .sort({ createdAt: -1 })

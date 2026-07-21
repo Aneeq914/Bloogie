@@ -1,5 +1,5 @@
 import { Hero, UserBlogList } from "@/components";
-import { CATEGORIES, type Category } from "@/type";
+import { getCategories } from "@/lib/actions/Blog.action";
 
 // Duplicate keys in a URL (?category=a&category=b) arrive as an array.
 const first = (v?: string | string[]) => (Array.isArray(v) ? v[0] : v);
@@ -7,12 +7,12 @@ const first = (v?: string | string[]) => (Array.isArray(v) ? v[0] : v);
 export default async function Home(props: PageProps<"/">) {
   const params = await props.searchParams;
 
-  // The only place raw URL input is trusted — anything not in CATEGORIES
-  // becomes undefined, which getBlogs reads as "no filter".
+  // The only place raw URL input is trusted — anything that isn't a real
+  // category id becomes undefined (getBlogs reads that as "no filter").
+  // Forwarding a non-ObjectId string would throw a Mongoose cast error.
+  const categories = await getCategories();
   const raw = first(params.category);
-  const category = CATEGORIES.includes(raw as Category)
-    ? (raw as Category)
-    : undefined;
+  const category = categories.some((c) => c.id === raw) ? raw : undefined;
 
   return (
     <div className="flex flex-col">

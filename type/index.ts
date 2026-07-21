@@ -11,6 +11,11 @@ export const CATEGORIES = [
 
 export type Category = (typeof CATEGORIES)[number];
 
+export interface CategoryProps {
+  name: string;
+  slug: string;
+}
+
 export interface AllBlogProps {
   id: string;
   title: string;
@@ -25,6 +30,7 @@ export interface AllBlogProps {
   published?: boolean;
   tags?: string[];
   category: Category;
+  categoryId?: string;
 }
 
 export interface CreateBlogProps {
@@ -37,6 +43,7 @@ export interface CreateBlogProps {
   published?: boolean;
   tags?: string[];
   category: Category;
+  categoryId?: string;
 }
 
 export interface ActionResult {

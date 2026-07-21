@@ -51,6 +51,11 @@ const blogSchema: Schema<AllBlogProps> = new Schema(
       required: [true, "category is required"],
       index: true,
     },
+    categoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      index: true,
+    },
   },
   {
     timestamps: true,
