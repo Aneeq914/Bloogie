@@ -1,14 +1,8 @@
 import mongoose, { Schema } from "mongoose";
-import { CategoryProps } from "@/type";
 
-const CategorySchema: Schema<CategoryProps> = new Schema(
+const CategorySchema: Schema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    slug: {
+    categoriesTitle: {
       type: String,
       required: true,
       unique: true,

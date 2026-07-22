@@ -16,7 +16,7 @@ export default async function DetailsPage({
   const session = await getSession();
   if (!details || (!details.published && details.authorId !== session?.id))
     return (
-      <div className="mx-auto flex max-w-3xl flex-col items-center px-4 py-24 text-center">
+      <div className="container-page-sm flex flex-col items-center py-24 text-center">
         <p className="text-lg font-medium text-gray-900">Blog not found</p>
         <Link
           href="/"

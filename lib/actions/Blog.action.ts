@@ -3,7 +3,6 @@
 import { ActionResult, CreateBlogProps } from "@/type";
 import { connectToDB } from "../dbConnect";
 import Blog from "@/models/Blog";
-import CategoryModel from "@/models/Category";
 import { revalidatePath } from "next/cache";
 import { Types } from "mongoose";
 import { getCurrentUser, getSession } from "../dal";
@@ -16,7 +15,7 @@ export async function updateBlog({
   longDescription,
   publishedAt,
   tags,
-  category,
+  categoryId,
 }: CreateBlogProps): Promise<ActionResult> {
   await connectToDB();
   const session = await getSession();
@@ -44,8 +43,6 @@ export async function updateBlog({
     }
   }
 
-  const categoryDoc = await CategoryModel.findOne({ name: category }).select("_id");
-
   try {
     await Blog.findByIdAndUpdate(
       id ?? new Types.ObjectId(),
@@ -58,8 +55,7 @@ export async function updateBlog({
         longDescription,
         publishedAt,
         tags,
-        category,
-        categoryId: categoryDoc?._id,
+        categoryId,
       },
       { upsert: true, new: true, setDefaultsOnInsert: true },
     );
@@ -102,12 +98,6 @@ export async function getRelatedBlogs(id: string, tags: string[]) {
 
 const PAGE_SIZE = 6;
 
-export async function getCategories() {
-  await connectToDB();
-  const categories = await CategoryModel.find().sort({ name: 1 }).lean();
-  return categories.map((c) => ({ id: c._id.toString(), name: c.name }));
-}
-
 export async function getBlogs(page = 1, categoryId?: string) {
   await connectToDB();
   try {
@@ -132,7 +122,7 @@ export async function getBlogs(page = 1, categoryId?: string) {
         longDescription: blog.longDescription,
         publishedAt: blog.publishedAt,
         tags: blog.tags,
-        category: blog.category,
+        categoryId: blog.categoryId?.toString(),
       })),
     };
   } catch (error) {
@@ -157,18 +147,23 @@ export async function getBlog(id: string) {
       publishedAt: blog.publishedAt,
       published: blog.published,
       tags: blog.tags,
-      category: blog.category,
+      categoryId: blog.categoryId?.toString(),
     };
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function getBlogsByAuthor(authorId: string, page = 1) {
+export async function getBlogsByAuthor(
+  authorId: string,
+  page = 1,
+  categoryId?: string,
+) {
   await connectToDB();
   try {
-    const total = await Blog.countDocuments({ authorId });
-    const blogs = await Blog.find({ authorId })
+    const filter = categoryId ? { authorId, categoryId } : { authorId };
+    const total = await Blog.countDocuments(filter);
+    const blogs = await Blog.find(filter)
       .sort({ createdAt: -1 })
       .skip((page - 1) * PAGE_SIZE)
       .limit(PAGE_SIZE)
@@ -185,6 +180,7 @@ export async function getBlogsByAuthor(authorId: string, page = 1) {
         publishedAt: blog.publishedAt,
         published: blog.published,
         tags: blog.tags,
+        categoryId: blog.categoryId?.toString(),
       })),
     };
   } catch (error) {

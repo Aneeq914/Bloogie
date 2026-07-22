@@ -7,7 +7,7 @@ export default function Loading() {
         className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-500/10 blur-3xl"
       />
 
-      <article className="relative mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+      <article className="container-page-sm relative py-12">
         <header className="mb-8">
           <div className="mb-6 h-4 w-16 skeleton" />
           {/* Title */}

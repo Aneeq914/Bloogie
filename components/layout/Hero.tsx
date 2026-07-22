@@ -7,7 +7,15 @@ const Hero = () => {
         aria-hidden
         className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-500/10 blur-3xl"
       />
-      <section className="relative mx-auto max-w-3xl px-6 py-16 text-center md:py-24">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute right-[-4rem] bottom-[-3rem] h-64 w-64 rounded-full bg-brand-600/10 blur-3xl"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-[-4rem] top-1/3 h-48 w-48 rounded-full bg-brand-400/10 blur-3xl"
+      />
+      <section className="container-page-sm relative py-16 text-center md:py-24">
         <span className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-50 px-4 py-1.5 text-sm font-medium text-brand-700">
           <span className="h-2 w-2 rounded-full bg-brand-500" />
           Welcome to Bloogie

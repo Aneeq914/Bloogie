@@ -23,9 +23,6 @@ function fileToBase64(file: File): Promise<string> {
 const labelClass =
   "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-500";
 
-const valueClass =
-  "rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm font-medium text-gray-900";
-
 const BasicProfile = () => {
   const user = useSession();
   const [preview, setPreview] = useState(user?.image || "");
@@ -59,8 +56,8 @@ const BasicProfile = () => {
   };
 
   return (
-    <main className="flex-1 bg-gray-50 px-6 py-10 sm:px-10 lg:px-14">
-      <div className="mx-auto max-w-2xl rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+    <main className="flex-1 overflow-y-auto bg-gray-50 px-4 py-10 sm:px-6 lg:px-8 scrollbar-hidden">
+      <div className="mx-auto max-w-2xl p-8 card">
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2 className="mb-1 text-2xl font-bold text-gray-900">
             Basic Information
@@ -182,7 +179,7 @@ const BasicProfile = () => {
           <div className="mt-8 flex justify-end border-t border-gray-200 pt-6">
             <button
               type="submit"
-              className="rounded-lg bg-brand-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-700"
+              className="btn-primary"
             >
               Save Changes
             </button>

@@ -1,5 +1,5 @@
 import { Hero, UserBlogList } from "@/components";
-import { getCategories } from "@/lib/actions/Blog.action";
+import { getCategories } from "@/lib/actions/Category.action";
 
 // Duplicate keys in a URL (?category=a&category=b) arrive as an array.
 const first = (v?: string | string[]) => (Array.isArray(v) ? v[0] : v);

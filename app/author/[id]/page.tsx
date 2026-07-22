@@ -14,7 +14,7 @@ export default async function AuthorPage({
 
   if (!author)
     return (
-      <div className="mx-auto flex max-w-3xl flex-col items-center px-4 py-24 text-center">
+      <div className="container-page-sm flex flex-col items-center py-24 text-center">
         <p className="text-lg font-medium text-gray-900">Author not found</p>
         <Link
           href="/"
@@ -34,7 +34,7 @@ export default async function AuthorPage({
         className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-500/10 blur-3xl"
       />
 
-      <section className="relative mx-auto max-w-3xl px-6 py-16 text-center">
+      <section className="container-page-sm relative py-16 text-center md:py-24">
         <Image
           src={author.image || "/Profile.png"}
           alt={author.username}
@@ -64,8 +64,8 @@ export default async function AuthorPage({
         </p>
       </section>
 
-      <div className="px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
+      <div className="pb-16">
+        <div className="container-page">
           {!blogs?.length ? (
             <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-6 py-20 text-center">
               <p className="text-lg font-medium text-gray-900">

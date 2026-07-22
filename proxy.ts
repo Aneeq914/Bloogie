@@ -2,7 +2,12 @@ import { NextResponse, type NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-const Author_Only = ["/create-blog", "/edit", "/author-dashboard"];
+const Author_Only = [
+  "/create-blog",
+  "/create-category",
+  "/edit",
+  "/author-dashboard",
+];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

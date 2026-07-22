@@ -1,8 +1,8 @@
 
 const AccountEditProfile = () => {
   return (
-    <main className="flex-1 bg-gray-50 px-6 py-10 sm:px-10 lg:px-14">
-      <div className="mx-auto max-w-2xl rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+    <main className="flex-1 overflow-y-auto bg-gray-50 px-4 py-10 sm:px-6 lg:px-8 scrollbar-hidden">
+      <div className="mx-auto max-w-2xl p-8 card">
             <h2 className="mb-1 text-2xl font-bold text-gray-900">
               Account Information
             </h2>
@@ -17,7 +17,7 @@ const AccountEditProfile = () => {
               <input
                 type="email"
                 placeholder="john@example.com"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
+                className="input"
               />
             </div>
 
@@ -28,12 +28,12 @@ const AccountEditProfile = () => {
               <input
                 type="password"
                 placeholder="••••••••"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
+                className="input"
               />
             </div>
 
             <div className="mt-8 flex justify-end border-t border-gray-200 pt-6">
-              <button className="rounded-lg bg-brand-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-700">
+              <button className="btn-primary">
                 Save Changes
               </button>
             </div>

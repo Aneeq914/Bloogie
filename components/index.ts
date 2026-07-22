@@ -5,6 +5,7 @@ import Footer from "./layout/Footer";
 
 // Blog
 import CreateBlog from "./blog/CreateBlog";
+import CreateCategory from "./blog/CreateCategory";
 import AuthorBlogList from "./blog/AuthorBlogList";
 import DeletePost from "./blog/DeleteButton";
 import UserBlogList from "./blog/UserBlogList";
@@ -27,6 +28,7 @@ export {
   Navbar,
   Footer,
   CreateBlog,
+  CreateCategory,
   AuthorBlogList,
   DeletePost,
   CreateUser,

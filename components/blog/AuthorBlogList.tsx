@@ -1,4 +1,5 @@
 import { getBlogsByAuthor } from "@/lib/actions/Blog.action";
+import { getCategories } from "@/lib/actions/Category.action";
 import { getSession } from "@/lib/dal";
 import dayjs from "dayjs";
 import Image from "next/image";
@@ -6,23 +7,41 @@ import Link from "next/link";
 import DeleteButton from "./DeleteButton";
 import PublishButton from "./PublishButton";
 import Pagination from "./Pagination";
+import CategoryFilter from "./CategoryFilter";
 
-const AuthorBlogList = async ({ page }: { page: number }) => {
+const AuthorBlogList = async ({
+  page,
+  category,
+}: {
+  page: number;
+  category?: string;
+}) => {
   const session = await getSession();
-  const { blogs, totalPages } = session?.id
-    ? ((await getBlogsByAuthor(session.id as string, page)) ?? {})
-    : {};
+  const [{ blogs, totalPages } = {}, categories] = await Promise.all([
+    session?.id
+      ? getBlogsByAuthor(session.id as string, page, category)
+      : Promise.resolve(undefined),
+    getCategories(),
+  ]);
+  const categoryTitle = new Map(categories.map((c) => [c.id, c.categoriesTitle]));
 
   return (
-      <div className="min-h-screen px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div id="blogs" className="mb-8 flex scroll-mt-20 flex-col gap-1">
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-              Your posts
-            </h2>
-            <p className="text-sm text-gray-500">
-              Manage, edit, and publish everything you&apos;ve written.
-            </p>
+      <div className="min-h-screen py-12">
+        <div className="container-page">
+          <div
+            id="blogs"
+            className="mb-8 flex scroll-mt-20 flex-row items-start justify-between gap-4"
+          >
+            <div className="flex flex-col gap-1">
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+                Your posts
+              </h2>
+              <p className="text-sm text-gray-500">
+                Manage, edit, and publish everything you&apos;ve written.
+              </p>
+            </div>
+
+            <CategoryFilter category={category} basePath="/author-dashboard" />
           </div>
 
           {!blogs?.length ? (
@@ -31,20 +50,14 @@ const AuthorBlogList = async ({ page }: { page: number }) => {
               <p className="mt-1 text-sm text-gray-500">
                 Your published blogs will show up here.
               </p>
-              <Link
-                href="/create-blog"
-                className="mt-6 inline-flex items-center rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700"
-              >
+              <Link href="/create-blog" className="btn-primary mt-6">
                 Create your first blog
               </Link>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {blogs.map((blog) => (
-                <div
-                  key={blog.id}
-                  className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-brand-100 hover:shadow-lg"
-                >
+              {blogs.map((blog, index) => (
+                <div key={blog.id} className="group flex flex-col overflow-hidden card-hover">
                   <Link href={`/detail-page/${blog.id}`} className="block">
                     <div className="relative h-48 w-full overflow-hidden">
                       <Image
@@ -52,10 +65,16 @@ const AuthorBlogList = async ({ page }: { page: number }) => {
                         alt={blog.title}
                         fill
                         unoptimized
+                        priority={index === 0}
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         className="object-cover transition duration-300 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 transition group-hover:opacity-100" />
+                      {blog.categoryId && categoryTitle.get(blog.categoryId) && (
+                        <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-brand-700 shadow-sm backdrop-blur">
+                          {categoryTitle.get(blog.categoryId)}
+                        </span>
+                      )}
                     </div>
                   </Link>
 
@@ -69,7 +88,7 @@ const AuthorBlogList = async ({ page }: { page: number }) => {
                       {blog.tags?.map((tag: string) => (
                         <button
                           key={tag}
-                          className="inline-flex w-fit items-center rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-600 ring-1 ring-inset ring-brand-100 transition hover:bg-brand-100 hover:text-brand-700"
+                          className="badge transition hover:bg-brand-100 hover:text-brand-700"
                         >
                           {tag}
                         </button>
@@ -117,6 +136,7 @@ const AuthorBlogList = async ({ page }: { page: number }) => {
             page={page}
             totalPages={totalPages ?? 0}
             basePath="/author-dashboard"
+            params={category ? { category } : undefined}
           />
         </div>
       </div>

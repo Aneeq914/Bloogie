@@ -9,39 +9,27 @@ export default function Loading() {
         <div className="mb-2 flex items-center gap-3">
           <div className="h-10 w-10 shrink-0 skeleton rounded-full" />
           <div className="space-y-2">
-            <div className="h-6 w-32 skeleton" />
+            <div className="h-6 w-40 skeleton" />
             <div className="h-4 w-56 skeleton" />
           </div>
         </div>
 
-        {/* Title, author, image, short description */}
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="space-y-2">
-            <div className="h-4 w-28 skeleton" />
-            <div className="h-11 w-full skeleton" />
-          </div>
-        ))}
-
-        {/* Long description textarea */}
         <div className="space-y-2">
-          <div className="h-4 w-36 skeleton" />
-          <div className="h-32 w-full skeleton" />
-        </div>
-
-        {/* Category */}
-        <div className="space-y-2">
-          <div className="h-4 w-24 skeleton" />
-          <div className="h-11 w-full skeleton" />
-        </div>
-
-        {/* Tags */}
-        <div className="space-y-2">
-          <div className="h-4 w-16 skeleton" />
+          <div className="h-4 w-12 skeleton" />
           <div className="h-11 w-full skeleton" />
         </div>
 
         <div className="mt-2 h-11 w-full skeleton" />
         <div className="mx-auto h-4 w-16 skeleton" />
+      </div>
+
+      <div className="relative w-full max-w-lg p-6 md:p-8 card">
+        <div className="mb-3 h-4 w-36 skeleton" />
+        <div className="flex flex-wrap gap-1.5">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-6 w-20 rounded-full skeleton" />
+          ))}
+        </div>
       </div>
     </div>
   );

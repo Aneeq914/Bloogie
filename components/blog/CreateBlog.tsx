@@ -7,16 +7,18 @@ import { useState } from "react";
 import { blogPostSchema } from "@/schemas/blogpostSchema";
 import Link from "next/link";
 import { updateBlog } from "@/lib/actions/Blog.action";
-import { AllBlogProps, CATEGORIES } from "@/type";
+import { AllBlogProps, CategoriesProps } from "@/type";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import CreatableSelect from "react-select/creatable";
 import Select from "react-select";
 import { toast } from "sonner";
+import { selectStyles } from "@/lib/selectStyles";
 
 interface BlogProps {
   blog?: Omit<AllBlogProps, "createdAt" | "updatedAt">;
   username: string;
+  categories: CategoriesProps[];
 }
 
 type BlogFormData = z.infer<typeof blogPostSchema>;
@@ -30,7 +32,7 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
-const CreateBlog = ({ blog, username }: BlogProps) => {
+const CreateBlog = ({ blog, username, categories }: BlogProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [preview, setPreview] = useState(blog?.image || "");
 
@@ -49,7 +51,7 @@ const CreateBlog = ({ blog, username }: BlogProps) => {
       shortDescription: blog?.shortDescription ?? "",
       longDescription: blog?.longDescription ?? "",
       tags: blog?.tags ?? [],
-      category: blog?.category,
+      categoryId: blog?.categoryId,
     },
   });
 
@@ -63,7 +65,7 @@ const CreateBlog = ({ blog, username }: BlogProps) => {
       longDescription: data.longDescription,
       publishedAt: new Date(),
       tags: data.tags,
-      category: data.category,
+      categoryId: data.categoryId,
     });
     setIsSubmitting(false);
 
@@ -99,21 +101,57 @@ const CreateBlog = ({ blog, username }: BlogProps) => {
   const shortDescription = watch("shortDescription");
 
   return (
-    <div className="flex min-h-screen w-full flex-col items-center gap-6 bg-linear-to-b from-gray-50 to-gray-100 px-4 py-10">
+    <div className="relative flex min-h-screen w-full flex-col items-center gap-6 overflow-hidden bg-linear-to-b from-gray-50 to-gray-100 px-4 py-10 sm:px-6 lg:px-8">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-500/10 blur-3xl"
+      />
       {isEdit && previewBlock}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full max-w-lg flex-col gap-4 p-6 md:p-8 card"
+        className="relative flex w-full max-w-lg flex-col gap-4 p-6 md:p-8 card"
       >
-        <div className="mb-2">
-          <h1 className="text-2xl font-bold text-gray-900">
-            {isEdit ? "Edit Blog" : "Create a Blog"}
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            {isEdit
-              ? "Update the details below and save your changes."
-              : "Fill in the details below to publish your post."}
-          </p>
+        <div className="mb-2 flex items-center gap-3">
+          <span className="icon-badge" aria-hidden>
+            {isEdit ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-5 w-5"
+              >
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-5 w-5"
+              >
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            )}
+          </span>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {isEdit ? "Edit Blog" : "Create a Blog"}
+            </h1>
+            <p className="mt-0.5 text-sm text-gray-500">
+              {isEdit
+                ? "Update the details below and save your changes."
+                : "Fill in the details below to publish your post."}
+            </p>
+          </div>
         </div>
         <div>
           <label htmlFor="title" className="label">
@@ -226,29 +264,34 @@ const CreateBlog = ({ blog, username }: BlogProps) => {
           )}
         </div>
         <div>
-          <label htmlFor="category" className="label">
+          <label htmlFor="categoryId" className="label">
             Category
           </label>
           <Controller
-            name="category"
+            name="categoryId"
             control={control}
-            render={({ field }) => (
-              <Select
-                instanceId="category"
-                placeholder="Pick one category"
-                options={CATEGORIES.map((c) => ({ label: c, value: c }))}
-                value={
-                  field.value
-                    ? { label: field.value, value: field.value }
-                    : null
-                }
-                onChange={(o) => field.onChange(o?.value)}
-                onBlur={field.onBlur}
-              />
-            )}
+            render={({ field }) => {
+              const options = categories.map((c) => ({
+                label: c.categoriesTitle,
+                value: c.id,
+              }));
+              return (
+                <Select
+                  instanceId="categoryId"
+                  placeholder="Pick a category"
+                  options={options}
+                  styles={selectStyles<false>()}
+                  value={
+                    options.find((o) => o.value === field.value) ?? null
+                  }
+                  onChange={(o) => field.onChange(o?.value)}
+                  onBlur={field.onBlur}
+                />
+              );
+            }}
           />
-          {errors.category && (
-            <p className="error">{errors.category.message}</p>
+          {errors.categoryId && (
+            <p className="error">{errors.categoryId.message}</p>
           )}
         </div>
         <div>
@@ -263,6 +306,7 @@ const CreateBlog = ({ blog, username }: BlogProps) => {
                 isMulti
                 instanceId="tags"
                 placeholder="e.g. Web Dev"
+                styles={selectStyles<true>()}
                 value={field.value?.map((t) => ({ label: t, value: t }))}
                 onChange={(e) => field.onChange(e.map((o) => o.value))}
                 onBlur={field.onBlur}
@@ -280,6 +324,12 @@ const CreateBlog = ({ blog, username }: BlogProps) => {
           disabled={isSubmitting}
           className="mt-2 w-full btn-primary"
         >
+          {isSubmitting && (
+            <span
+              aria-hidden
+              className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white"
+            />
+          )}
           {isSubmitting
             ? "Saving..."
             : isEdit
@@ -287,7 +337,7 @@ const CreateBlog = ({ blog, username }: BlogProps) => {
               : "Create\u00A0Blog"}
         </button>
         <Link
-          href={`/`}
+          href="/author-dashboard"
           className="text-center text-sm font-medium text-gray-500 transition hover:text-gray-700"
         >
           ← Back

@@ -1,19 +1,8 @@
 import type { Types } from "mongoose";
 
-export const CATEGORIES = [
-  "Technology",
-  "Design",
-  "Business",
-  "Lifestyle",
-  "Travel",
-  "Food",
-] as const;
-
-export type Category = (typeof CATEGORIES)[number];
-
-export interface CategoryProps {
-  name: string;
-  slug: string;
+export interface CategoriesProps {
+  id: string;
+  categoriesTitle: string;
 }
 
 export interface AllBlogProps {
@@ -29,7 +18,6 @@ export interface AllBlogProps {
   publishedAt: Date;
   published?: boolean;
   tags?: string[];
-  category: Category;
   categoryId?: string;
 }
 
@@ -42,7 +30,6 @@ export interface CreateBlogProps {
   publishedAt: Date;
   published?: boolean;
   tags?: string[];
-  category: Category;
   categoryId?: string;
 }
 

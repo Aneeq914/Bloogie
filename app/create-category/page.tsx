@@ -1,16 +1,15 @@
-import { CreateBlog } from "@/components";
+import { CreateCategory } from "@/components";
 import { getCategories } from "@/lib/actions/Category.action";
 import { getCurrentUser } from "@/lib/dal";
 import { redirect } from "next/navigation";
 
-export default async function CreateBlogPage() {
-  await new Promise((resolve=>setTimeout(resolve,1000)))
+export default async function CreateCategoryPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   const categories = await getCategories();
   return (
     <div>
-      <CreateBlog username={user.username} categories={categories} />
+      <CreateCategory categories={categories} />
     </div>
   );
 }

@@ -9,8 +9,7 @@ const Pagination = ({
   page: number;
   totalPages: number;
   basePath: string;
-  // Any active filters to carry across page changes. Kept generic so a new
-  // filter doesn't silently get dropped the way `category` once was.
+  // Any active filters to carry across page changes.
   params?: Record<string, string>;
 }) => {
   if (totalPages < 2) return null;

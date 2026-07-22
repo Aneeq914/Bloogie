@@ -9,6 +9,9 @@
 @theme {
   --color-brand-50: #eff6ff;
   --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-300: #93c5fd;
+  --color-brand-400: #60a5fa;
   --color-brand-500: #3b82f6;
   --color-brand-600: #2563eb;
   --color-brand-700: #1d4ed8;
@@ -43,7 +46,24 @@ body {
 
   /* Primary call-to-action button (Create Blog, Register, Login, Hero CTA). */
   .btn-primary {
-    @apply rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-linear-to-r from-brand-600 to-brand-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand-600/20 transition hover:shadow-md hover:shadow-brand-600/30 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-sm;
+  }
+
+  /* Secondary call-to-action — same weight as .btn-primary, quieter fill
+     (Create Category, alternate dashboard actions). */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-brand-200 bg-white px-4 py-2.5 text-sm font-semibold text-brand-600 shadow-sm transition hover:border-brand-300 hover:bg-brand-50 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0;
+  }
+
+  /* Destructive call-to-action — logout, delete, irreversible actions. */
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-linear-to-r from-red-600 to-red-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-red-600/20 transition hover:shadow-md hover:shadow-red-600/30 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-sm;
+  }
+
+  /* Quieter destructive action — paired alongside .btn-danger (e.g. "log out
+     everywhere" next to "log out here"). */
+  .btn-danger-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-600 shadow-sm transition hover:border-red-300 hover:bg-red-50 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0;
   }
 
   /* Standard elevated card / panel. */
@@ -51,14 +71,51 @@ body {
     @apply rounded-2xl border border-gray-200 bg-white shadow-sm;
   }
 
-  /* Shared max-width container so headers, hero, and footer share edges. */
+  /* Interactive card — blog cards, anything that's itself a link/target. */
+  .card-hover {
+    @apply rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-brand-100 hover:shadow-lg;
+  }
+
+  /* Small pill used for tags/category chips. Compose with a color utility
+     (e.g. `class="badge bg-gray-50 text-gray-600 border-gray-200"`) — brand
+     colors below are the default so most call sites need nothing extra. */
+  .badge {
+    @apply inline-flex w-fit items-center rounded-full border border-brand-200 bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-600;
+  }
+
+  /* Small circular icon container, used in section headers and CTA rows. */
+  .icon-badge {
+    @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-brand-200 bg-brand-50 text-brand-600;
+  }
+
+  /* Shared max-width container so headers, hero, and footer share edges.
+     Same responsive horizontal padding rhythm everywhere: tight on phones,
+     roomier as the viewport grows. */
   .container-page {
-    @apply mx-auto w-full max-w-7xl px-6;
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Narrower variant for centered, article-like content — hero copy,
+     author bio, blog detail, empty states. Same padding rhythm as
+     .container-page, tighter max-width. */
+  .container-page-sm {
+    @apply mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8;
   }
 
   /* Placeholder block used by loading.tsx screens. Pulses softly while
      server components stream in. Compose with width/height utilities. */
   .skeleton {
     @apply animate-pulse rounded-md bg-gray-200;
+  }
+
+  /* Keeps an overflow-y-auto/overflow-x-auto panel scrollable by mouse,
+     trackpad, and keyboard — just hides the track/thumb chrome. Not a
+     Tailwind utility, so plain properties instead of @apply. */
+  .scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
   }
 }

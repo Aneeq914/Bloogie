@@ -1,5 +1,7 @@
 "use client";
 
+import { CategoriesProps } from "@/type";
+
 // The only client code in the filter: submit the surrounding <Form> as soon as
 // a category is picked, so no "Filter" button is needed. Without JS the select
 // still works — it just needs the form's own submit to apply.
@@ -7,7 +9,7 @@ const CategorySelect = ({
   categories,
   category,
 }: {
-  categories: { id: string; name: string }[];
+  categories: CategoriesProps[];
   category?: string;
 }) => (
   <select
@@ -19,7 +21,7 @@ const CategorySelect = ({
     <option value="">All categories</option>
     {categories.map((c) => (
       <option key={c.id} value={c.id}>
-        {c.name}
+        {c.categoriesTitle}
       </option>
     ))}
   </select>

@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { CATEGORIES } from "@/type";
 
 export const blogPostSchema = z.object({
   title: z.string().trim().min(1, "Title is required"),
@@ -14,5 +13,5 @@ export const blogPostSchema = z.object({
     .trim()
     .min(100, "Blog content must be at least 100 characters"),
   tags: z.array(z.string()).optional(),
-  category: z.enum(CATEGORIES, "Pick a category"),
+  categoryId: z.string().min(1, "Pick a category"),
 });
