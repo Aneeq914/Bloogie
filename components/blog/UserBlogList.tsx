@@ -17,7 +17,7 @@ const UserBlogList = async ({
     getBlogs(page, category),
     getCategories(),
   ]);
-  const categoryTitle = new Map(categories.map((c) => [c.id, c.categoriesTitle]));
+  const categoryTitle = new Map(categories.map((c) => [c.id, c.title]));
 
   return (
     <div>

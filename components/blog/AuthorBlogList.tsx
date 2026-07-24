@@ -23,7 +23,7 @@ const AuthorBlogList = async ({
       : Promise.resolve(undefined),
     getCategories(),
   ]);
-  const categoryTitle = new Map(categories.map((c) => [c.id, c.categoriesTitle]));
+  const categoryTitle = new Map(categories.map((c) => [c.id, c.title]));
 
   return (
       <div className="min-h-screen py-12">

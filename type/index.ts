@@ -2,7 +2,7 @@ import type { Types } from "mongoose";
 
 export interface CategoriesProps {
   id: string;
-  categoriesTitle: string;
+  title: string;
 }
 
 export interface AllBlogProps {

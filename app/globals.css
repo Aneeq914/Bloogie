@@ -46,24 +46,24 @@ body {
 
   /* Primary call-to-action button (Create Blog, Register, Login, Hero CTA). */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-linear-to-r from-brand-600 to-brand-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand-600/20 transition hover:shadow-md hover:shadow-brand-600/30 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-sm;
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-linear-to-r from-brand-600 to-brand-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-brand-600/20 transition hover:shadow-md hover:shadow-brand-600/30 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-sm;
   }
 
   /* Secondary call-to-action — same weight as .btn-primary, quieter fill
      (Create Category, alternate dashboard actions). */
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-brand-200 bg-white px-4 py-2.5 text-sm font-semibold text-brand-600 shadow-sm transition hover:border-brand-300 hover:bg-brand-50 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0;
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-brand-200 bg-white px-4 py-2.5 text-sm font-semibold text-brand-600 shadow-sm transition hover:border-brand-300 hover:bg-brand-50 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0;
   }
 
   /* Destructive call-to-action — logout, delete, irreversible actions. */
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-linear-to-r from-red-600 to-red-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-red-600/20 transition hover:shadow-md hover:shadow-red-600/30 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-sm;
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-linear-to-r from-red-600 to-red-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-red-600/20 transition hover:shadow-md hover:shadow-red-600/30 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-sm;
   }
 
   /* Quieter destructive action — paired alongside .btn-danger (e.g. "log out
      everywhere" next to "log out here"). */
   .btn-danger-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-600 shadow-sm transition hover:border-red-300 hover:bg-red-50 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0;
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-600 shadow-sm transition hover:border-red-300 hover:bg-red-50 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0;
   }
 
   /* Standard elevated card / panel. */

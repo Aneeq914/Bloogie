@@ -272,7 +272,7 @@ const CreateBlog = ({ blog, username, categories }: BlogProps) => {
             control={control}
             render={({ field }) => {
               const options = categories.map((c) => ({
-                label: c.categoriesTitle,
+                label: c.title,
                 value: c.id,
               }));
               return (
@@ -348,3 +348,4 @@ const CreateBlog = ({ blog, username, categories }: BlogProps) => {
 };
 
 export default CreateBlog;
+

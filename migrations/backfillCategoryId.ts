@@ -9,8 +9,8 @@ import Blog from "@/models/Blog";
 export async function up() {
   await connectToDB();
 
-  const design = await Category.findOne({ categoriesTitle: "Design" });
-  const technology = await Category.findOne({ categoriesTitle: "Technology" });
+  const design = await Category.findOne({ title: "Design" });
+  const technology = await Category.findOne({ title: "Technology" });
   if (!design || !technology) {
     throw new Error(
       "Expected 'Design' and 'Technology' categories to exist — seed categories first",

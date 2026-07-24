@@ -6,32 +6,37 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { categorySchema } from "@/schemas/categorySchema";
 import Link from "next/link";
-import { createCategory } from "@/lib/actions/Category.action";
+import { createCategory, updateCategory } from "@/lib/actions/Category.action";
 import { CategoriesProps } from "@/type";
 import { toast } from "sonner";
 
 type CategoryFormData = z.infer<typeof categorySchema>;
 
-const CreateCategory = ({
-  categories,
-}: {
-  categories: CategoriesProps[];
-}) => {
+const CreateCategory = ({ categories }: { categories: CategoriesProps[] }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingId, setEditingId] = useState("");
 
   const {
     control,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
-    defaultValues: { categoriesTitle: "" },
+    defaultValues: { title: "" },
   });
+
+  const handleSelect = (category: CategoriesProps) => {
+    setEditingId(category.id);
+    setValue("title", category.title);
+  };
 
   const onSubmit = async (data: CategoryFormData) => {
     setIsSubmitting(true);
-    const result = await createCategory(data);
+    const result = editingId
+      ? await updateCategory({ id: editingId, title: data.title })
+      : await createCategory(data);
     setIsSubmitting(false);
 
     if (!result.success) {
@@ -40,6 +45,7 @@ const CreateCategory = ({
     }
 
     toast.success(result.message);
+    setEditingId("");
     reset();
   };
 
@@ -71,32 +77,32 @@ const CreateCategory = ({
           </span>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              Create a Category
+              {editingId ? "Edit Category" : "Create a Category"}
             </h1>
             <p className="mt-0.5 text-sm text-gray-500">
-              Add a new category blogs can be grouped under.
+              {editingId
+                ? "Update the category title below."
+                : "Add a new category blogs can be grouped under."}
             </p>
           </div>
         </div>
         <div>
-          <label htmlFor="categoriesTitle" className="label">
+          <label htmlFor="title" className="label">
             Title
           </label>
           <Controller
-            name="categoriesTitle"
+            name="title"
             control={control}
             render={({ field }) => (
               <input
-                id="categoriesTitle"
+                id="title"
                 placeholder="e.g. Technology"
                 className="input"
                 {...field}
               />
             )}
           />
-          {errors.categoriesTitle && (
-            <p className="error">{errors.categoriesTitle.message}</p>
-          )}
+          {errors.title && <p className="error">{errors.title.message}</p>}
         </div>
         <button
           title="CreateCategory"
@@ -110,8 +116,24 @@ const CreateCategory = ({
               className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white"
             />
           )}
-          {isSubmitting ? "Saving..." : "Create Category"}
+          {isSubmitting
+            ? "Saving..."
+            : editingId
+              ? "Save Changes"
+              : "Create Category"}
         </button>
+        {editingId && (
+          <button
+            type="button"
+            onClick={() => {
+              setEditingId("");
+              reset();
+            }}
+            className="cursor-pointer text-center text-sm font-medium text-gray-500 transition hover:text-gray-700"
+          >
+            Cancel edit
+          </button>
+        )}
         <Link
           href="/author-dashboard"
           className="text-center text-sm font-medium text-gray-500 transition hover:text-gray-700"
@@ -127,9 +149,14 @@ const CreateCategory = ({
           </h2>
           <div className="flex flex-wrap gap-1.5">
             {categories.map((c) => (
-              <span key={c.id} className="badge">
-                {c.categoriesTitle}
-              </span>
+              <button
+                type="button"
+                onClick={() => handleSelect(c)}
+                key={c.id}
+                className={`badge cursor-pointer transition hover:bg-brand-100 hover:text-brand-700 ${editingId === c.id ? "bg-brand-100 text-brand-700" : ""}`}
+              >
+                {c.title}
+              </button>
             ))}
           </div>
         </div>
